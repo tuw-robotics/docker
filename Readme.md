@@ -4,7 +4,7 @@
 In oder to build the docker containers build first base followed by devel
 
 * [base](base/)
-* [devel](devel/Readme.md)
+* [devel](devel/)
 
 ## Utils
 ### Moving docker data container
