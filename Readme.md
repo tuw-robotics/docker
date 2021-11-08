@@ -3,7 +3,7 @@
 ## Build
 In oder to build the docker containers build first base followed by devel
 
-* [base](base/Readme.md)
+* [base](base/)
 * [devel](devel/Readme.md)
 
 ## Utils
