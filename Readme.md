@@ -1,9 +1,13 @@
 # docker container for mxcar
 
-## Moving docker data container
-Docker installation
-
 ## Build
+In oder to build the docker containers build first base followed by devel
+
+* [ros](ros/Readme.md)
+* [devel](devel/Readme.md)
+
+##Utils
+### Moving docker data container
 ```
 sudo service docker stop
 sudo vim /etc/docker/daemon.json 
@@ -21,7 +25,7 @@ sudo service docker start
 ```
 
 
-## Delete container
+### Delete container
 ```
 export CONTAINER_NAME=mxcar_base
 docker container stop ${CONTAINER_NAME}; docker container rm ${CONTAINER_NAME}

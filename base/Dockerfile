@@ -10,7 +10,7 @@ ARG MY_PASSWORD="holladrio431"
 ARG MY_UID=1000
 ARG MY_GID=1000
 ARG MY_HOME=/home/${MY_USER}
-ARG ROS_VERSION=noetic
+ARG ROS_DISTRO=noetic
 ENV MY_USER ${MY_USER}
 
 ENV TZ=Europe/Vienna
@@ -76,6 +76,20 @@ RUN  echo -n 'password\npassword\nn\n' | su ${MY_USER} -c /opt/TurboVNC/bin/vncp
 RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
 
 COPY ./utils/bash_history ${MY_HOME}/.bash_history
+
+
+# ROS
+USER root
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+RUN apt install -y curl
+RUN curl -k https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | sudo apt-key add -
+RUN apt update
+RUN apt install -y ros-${ROS_DISTRO}-desktop
+RUN apt install -y python3-rosdep
+
+# clean apt
+RUN rm -rf /var/lib/apt/lists/*
+
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
