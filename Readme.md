@@ -1,10 +1,7 @@
-# docker container for mxcar
+# Ubuntu with ROS and a Turbo VNC-Server
 
 ## Build
-In oder to build the docker containers build first base followed by devel
-
-* [base](base/)
-* [devel](devel/)
+For details how to build the container check the subfolder [base](base/).
 
 ## Utils
 ### Moving docker data container
@@ -27,7 +24,7 @@ sudo service docker start
 
 ### Delete container
 ```
-export CONTAINER_NAME=mxcar_base
+export CONTAINER_NAME=my_container
 docker container stop ${CONTAINER_NAME}; docker container rm ${CONTAINER_NAME}
 ```
 
