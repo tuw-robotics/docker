@@ -3,7 +3,8 @@
 ## Build
 Select your container you like to build and check the related Readme.md
 
-* [ubuntu20-ros-turbovnc](ubuntu20-ros-turbovnc/)
+* [ubuntu-noetic](ubuntu-noetic/)
+* [ubuntu-noetic-turbovnc](ubuntu-noetic-turbovnc/)
 
 ## Utils
 
