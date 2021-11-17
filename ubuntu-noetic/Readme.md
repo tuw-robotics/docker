@@ -14,9 +14,9 @@ docker run -ti --network="host" ubuntu:noetic
 
 Create a permanent container
 ```
-export CONTAINER_HOST_NAME=ros
-export CONTAINER_NAME=ubuntu:noetic
-docker create --name $CONTAINER_HOST_NAME  --hostname=$CONTAINER_HOST_NAME --add-host $CONTAINER_HOST_NAME:127.0.0.1  --interactive  --network="host"  $CONTAINER_NAME
-docker container start $CONTAINER_HOST_NAME
-docker container exec -it $CONTAINER_HOST_NAME bash
+export NAME=ros
+export IMAGE=ubuntu:noetic
+docker create --name $NAME  --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  $IMAGE
+docker container start $NAME
+docker container exec -it $NAME bash
 ```
