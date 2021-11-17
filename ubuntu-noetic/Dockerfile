@@ -1,8 +1,5 @@
 FROM ubuntu:20.04
 
-ARG    TURBOVNC_VERSION="2.2.6"
-ENV    RES "1920x1080"
-
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
 ARG MY_NAME="Robot"
@@ -45,9 +42,8 @@ RUN apt-get install -y \
       wget             \
       tmux             \
       rsync            \
-      xfce4            \
-#      xfce4-goodies   \
-      xauth            
+      curl             \
+      gnupg2
 
 # Setup tmux some configurations
 COPY ./utils/tmux.conf ${MY_HOME}/.tmux.conf 
@@ -59,29 +55,9 @@ RUN sed -i 's/HISTSIZE=1000/HISTSIZE=20000/g' ${MY_HOME}/.bashrc  && \
 # Allow root user to login over ssh on port 2222
 RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
 
-# Turbovnc
-## Install VNC
-RUN wget "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O /opt/turbovnc.deb && \
-    dpkg -i /opt/turbovnc.deb && \
-    rm -f /opt/turbovnc.deb
-
-## Setup VNC password
-RUN mkdir ${MY_HOME}/.vnc
-COPY ./utils/vnc/xstartup.turbovnc ${MY_HOME}/.vnc/xstartup.turbovnc
-RUN  chown -R ${MY_USER} ${MY_HOME}/.vnc && \
-    /usr/bin/printf '%s\n%s\n%s\n' 'password' 'password' 'n' | su ${MY_USER} -c /opt/TurboVNC/bin/vncpasswd
-RUN  echo -n 'password\npassword\nn\n' | su ${MY_USER} -c /opt/TurboVNC/bin/vncpasswd
-
-# Remove keyboard shortcut to allow bash_completion in xfce4-terminal
-RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
-
-COPY ./utils/bash_history ${MY_HOME}/.bash_history
-
-
 # ROS
 USER root
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt install -y curl
 RUN curl -k https://raw.githubusercontent.com/ros/rosdistro/master/ros.key | sudo apt-key add -
 RUN apt update
 RUN apt install -y ros-${ROS_DISTRO}-desktop
@@ -90,6 +66,9 @@ RUN apt install -y python3-rosdep
 # clean apt
 RUN rm -rf /var/lib/apt/lists/*
 
+USER ${MY_USER}
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+RUN echo "sudo service ssh start" >> ~/.bash_history
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
