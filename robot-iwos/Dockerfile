@@ -7,7 +7,7 @@ ARG ROS_DISTRO=noetic
 ENV MY_USER ${MY_USER}
 
 
-ENV PROJECT_ROOT ${MY_USER}/projects/iwos
+ENV PROJECT_ROOT ./projects/iwos
 
 USER root
 # Install locale and set
