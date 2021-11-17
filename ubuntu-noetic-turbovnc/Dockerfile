@@ -15,11 +15,7 @@ USER root
 RUN apt-get update
 
 # Install libraries/dependencies
-RUN apt-get install -y \
-      xfce4            \
-#      xfce4-goodies   \
-      xauth            
-
+RUN apt-get install -y --no-install-recommends xubuntu-desktop
 
 # Turbovnc
 ## Install VNC
@@ -37,13 +33,28 @@ RUN  echo -n 'password\npassword\nn\n' | /opt/TurboVNC/bin/vncpasswd
 # Remove keyboard shortcut to allow bash_completion in xfce4-terminal
 RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
 
-RUN echo "/opt/TurboVNC/bin/vncserver -kill :1" >> ~/.bashrc
-RUN echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ~/.bashrc
+RUN echo "/opt/TurboVNC/bin/vncserver -kill :1" >> ~/.bash_history
+RUN echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ~/.bash_history
+RUN echo "exit" >> ~/.bash_history
 
 # clean apt
 USER root
 RUN rm -rf /var/lib/apt/lists/*
+RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
 
+
+# Kdevelop
+RUN apt-get update
+RUN apt-get install -y \
+      kdevelop         \          
+      geany     
+            
+# VS Code 
+RUN apt install -y software-properties-common apt-transport-https wget
+RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+RUN apt-get update
+RUN apt install code
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}

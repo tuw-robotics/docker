@@ -43,6 +43,7 @@ RUN apt-get install -y \
       tmux             \
       rsync            \
       curl             \
+      git              \
       gnupg2
 
 # Setup tmux some configurations
