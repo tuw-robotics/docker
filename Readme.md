@@ -20,6 +20,10 @@ Select your container you like to build and check the related Readme.md
 export CONTAINER_NAME=my_container
 docker container stop ${CONTAINER_NAME}; docker container rm ${CONTAINER_NAME}
 ```
+#### Delete all stoped containers
+```
+docker ps -a -q -f status=exited | xargs docker rm
+```
 ### Delete images
 #### Delete all images
 ```

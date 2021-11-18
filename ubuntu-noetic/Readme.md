@@ -4,7 +4,7 @@ This is a container Ubuntu ros desktop
 
 First, get the image by cloning this repository and building it:
 ```
-docker build -t ubuntu:noetic .
+docker build -t ubuntu:noetic --build-arg MY_PASSWORD=asdf431 .
 ```
 
 Then, run it:

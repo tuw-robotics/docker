@@ -45,6 +45,8 @@ RUN apt-get install -y \
       curl             \
       git              \
       gnupg2
+      
+RUN apt-get install -y --no-install-recommends xubuntu-desktop geany dbus-x11
 
 # Setup tmux some configurations
 COPY ./utils/tmux.conf ${MY_HOME}/.tmux.conf 
@@ -68,8 +70,11 @@ RUN apt install -y python3-rosdep
 RUN rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
-RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+RUN touch ~/.sudo_as_admin_successful
+RUN echo "exit" >> ~/.bash_history
+RUN echo "tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
 RUN echo "sudo service ssh start" >> ~/.bash_history
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
