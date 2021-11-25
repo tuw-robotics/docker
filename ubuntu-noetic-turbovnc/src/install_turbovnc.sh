@@ -5,7 +5,7 @@ set -e
 echo "Install TurboVNC"
 export TURBOVNC_VERSION="2.2.6"
 
-apt install -y --no-install-recommends xubuntu-desktop wget
+apt install -y --no-install-recommends xubuntu-desktop wget dbus-x11
 wget "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O /opt/turbovnc.deb
 dpkg -i /opt/turbovnc.deb
 rm -f /opt/turbovnc.deb
