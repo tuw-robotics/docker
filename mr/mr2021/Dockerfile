@@ -1,4 +1,4 @@
-FROM ubuntu-noetic:turbovnc
+FROM robotics:base
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
