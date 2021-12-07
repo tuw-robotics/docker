@@ -7,6 +7,7 @@ echo "install bash tools"
 apt-get install -y     \
       openssh-server   \
       cmake            \
+      cmake-curses-gui \
       vim              \
       wget             \
       tmux             \
