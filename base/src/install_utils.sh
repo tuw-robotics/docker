@@ -13,8 +13,9 @@ apt-get install -y     \
       tmux             \
       rsync            \
       curl             \
+      gnupg2           \
       git              \
-      gnupg2
+      myrepos
 
 
 # Allow root user to login over ssh on port 2222

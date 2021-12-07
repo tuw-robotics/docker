@@ -22,3 +22,5 @@ docker container exec -it $NAME bash
 ```
 cd ~/projects/car
 mr -c mrconfig update
+
+```
