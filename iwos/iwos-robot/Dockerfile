@@ -1,4 +1,4 @@
-FROM ubuntu-noetic:turbovnc
+FROM robotics:base
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
@@ -7,18 +7,21 @@ ARG ROS_DISTRO=noetic
 ENV MY_USER ${MY_USER}
 
 
-ENV PROJECT_ROOT ./projects/iwos
+ENV PROJECT_ROOT ${MY_HOME}/projects/iwos
 
 USER root
 # Install locale and set
-RUN apt-get update &&  apt-get install -y git
+RUN apt-get update &&  apt-get install -y git python3-pip 
+
 
 USER ${MY_USER}
-RUN mkdir -p ${PROJECT_ROOT}/ws00/src
-RUN cd ${PROJECT_ROOT}/ws00/src  && \
-	git clone https://github.com/tuw-robotics/tuw_msgs.git && \
-	git clone -b devel-iwos https://github.com/tuw-robotics/tuw_teleop.git
-	
+RUN rosdep update
+
+USER root
+ADD ./src/setup_ws.sh   ${INST_SCRIPTS}/setup_ws.sh  
+RUN chmod a+x ${INST_SCRIPTS}/setup_ws.sh
+USER root
+RUN $INST_SCRIPTS/setup_ws.sh  
 
 # clean apt
 USER root
