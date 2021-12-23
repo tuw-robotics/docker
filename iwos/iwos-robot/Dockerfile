@@ -33,4 +33,3 @@ USER ${MY_USER}
 WORKDIR ${MY_HOME}
 ENV HOME ${MY_HOME}
 CMD /bin/bash
-

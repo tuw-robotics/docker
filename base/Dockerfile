@@ -15,7 +15,7 @@ ENV ROS_DISTRO=${ROS_DISTRO}
 ENV INST_SCRIPTS=/tmp
 
 USER root
-RUN apt update 
+RUN apt-get update && apt-get -y upgrade
 
 # Install locale and set
 ENV DEBIAN_FRONTEND noninteractive
