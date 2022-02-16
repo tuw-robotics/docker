@@ -2,12 +2,17 @@
 Image for the iwos development
 
 ```
-docker build -t robot:iwos .
+docker build -t robotics:iwos .
 ```
 
 Then, run it:
 ```
-docker run --privileged -ti --network="host" robot:iwos
+docker run --privileged -ti --network="host" --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 robotics:iwos
+```
+
+In order to give access to the gamepad run the following command in the container (the default password is `xyz`):
+```
+sudo chmod 777 /dev/input/js0
 ```
 
 Create a permanent container

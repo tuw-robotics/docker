@@ -9,6 +9,7 @@ apt-get install -y     \
       cmake            \
       cmake-curses-gui \
       vim              \
+      nano             \
       wget             \
       tmux             \
       rsync            \

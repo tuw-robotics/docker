@@ -3,13 +3,16 @@ FROM robotics:base
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
 ARG MY_HOME=/home/${MY_USER}
+ARG MY_PASSWORD="xyz"
 ARG ROS_DISTRO=noetic
 ENV MY_USER ${MY_USER}
-
 
 ENV PROJECT_ROOT ${MY_HOME}/projects/iwos
 
 USER root
+
+RUN echo "${MY_USER}:${MY_PASSWORD}" | chpasswd
+
 # Install locale and set
 RUN apt-get update &&  apt-get install -y git python3-pip 
 

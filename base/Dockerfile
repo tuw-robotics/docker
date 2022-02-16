@@ -3,7 +3,7 @@ FROM osrf/ros:noetic-desktop
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
 ARG MY_NAME="Robot"
-ARG MY_PASSWORD="holladrio431"
+ARG MY_PASSWORD="password"
 ARG MY_UID=1000
 ARG MY_GID=1000
 ARG ROS_DISTRO=noetic
@@ -15,11 +15,11 @@ ENV ROS_DISTRO=${ROS_DISTRO}
 ENV INST_SCRIPTS=/tmp
 
 USER root
-RUN apt-get update && apt-get -y upgrade
+RUN apt update && apt -y upgrade
 
 # Install locale and set
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get install -y locales apt-utils
+RUN apt install -y locales apt-utils
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY ./utils/keyboard /etc/default/keyboard
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; locale-gen

@@ -9,6 +9,7 @@ groupadd -g ${MY_GID} ${MY_USER}
 useradd -m -s /bin/bash  -u ${MY_UID} -g ${MY_GID} ${MY_USER}
 export uid=${MY_UID} gid=${MY_GID}
 usermod -aG sudo ${MY_USER}
+usermod -aG dialout ${MY_USER}
 echo "${MY_USER}:${MY_PASSWORD}" | chpasswd
 
 # Optimize bashrc
