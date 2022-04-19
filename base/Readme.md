@@ -2,8 +2,8 @@
 
 This is a container with TurboVNC and an Ubuntu XFCE desktop.<br> 
 The container serves as base for many tuw-robotics docker containers such as:
-* [mobile_robotis](../mobile_robotics)
-* [multi_robot_route_planner](../tuw_multi_robot)
+* [Mobile Robotis](../mobile_robotics)
+* [Multi Robot Route Planner](../tuw_multi_robot)
 * ...
 
 ## Creating Container
