@@ -1,9 +1,12 @@
-# base-ros base-ros2
+# ROS1 tuw:noetic and ROS2 tuw:galactic 
 
-This is a container TurboVNC and Ubuntu XFCE desktop.
+This is a container with TurboVNC and an Ubuntu XFCE desktop.<br> 
+The container serves as base for many tuw-robotics docker containers such as:
+* [mobile_robotis](../mobile_robotics)
+* [multi_robot_route_planner](../tuw_multi_robot)
+* ...
 
-First, get the image by cloning this repository and building it:
-
+## Creating Container
 ```
 export ROS_DISTRO=noetic
 export ROS_DISTRO=galactic
