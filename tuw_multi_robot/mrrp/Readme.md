@@ -1,5 +1,7 @@
 # tuw:mrrp
-## Docker
+## Precondition
+Build the [tuw:noetic](../../base) base image first
+## Creating Container
 1. Build Container <br>
 `docker build -f Dockerfile-mrrp -t tuw:mrrp .`
 2. You have two options to start the container
