@@ -16,7 +16,8 @@ RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
 
 USER root
 RUN apt-get update
-RUN $INST_SCRIPTS/install_ros.sh  
+RUN $INST_SCRIPTS/install_stage.sh  
+RUN $INST_SCRIPTS/install_stage_ros2.sh  
 
 USER ${MY_USER}
 RUN mkdir -p ${MR_DIR}/src/
@@ -30,7 +31,7 @@ RUN echo "ros2 run rqt_reconfigure rqt_reconfigure" >> ~/.bash_history
 # clean apt
 USER root
 RUN rm -rf /var/lib/apt/lists/*
-RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
+RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}/projects ${MY_HOME}/ros*
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
