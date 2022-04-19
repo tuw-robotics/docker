@@ -1,4 +1,4 @@
-FROM robotics:base
+FROM tuw:noetic
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot

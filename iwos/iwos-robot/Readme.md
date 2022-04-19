@@ -1,8 +1,8 @@
-# robot-iwos
+# tuw-iwos
 Image for the iwos development
 
 ```
-docker build -t robotics:iwos .
+docker build -t tuw:iwos .
 ```
 
 Then, run it:

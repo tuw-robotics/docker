@@ -1,4 +1,7 @@
-FROM robotics:base
+FROM tuw:noetic
+
+ENV INST_SCRIPTS=/tmp
+ENV SRC_DIR=./mrrp
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
@@ -25,6 +28,7 @@ RUN apt-get install -y  libdxflib-dev \
 USER ${MY_USER}
 RUN rosdep update
 
+RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; attach" >> ~/.bash_history
 RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
 RUN echo "roslaunch tuw_multi_robot_demo demo.launch room:=cave  nr_of_robots:=3 " >> ~/.bash_history
 RUN echo "roslaunch tuw_multi_robot_demo demo.launch room:=warehouse032  nr_of_robots:=14" >> ~/.bash_history
@@ -35,7 +39,7 @@ RUN echo "rosrun tuw_multi_robot_goal_generator goals_random _nr_of_robots:=200 
 RUN echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ~/.bash_history
 
 USER root
-ADD ./src/setup_ws.sh   ${INST_SCRIPTS}/setup_ws.sh  
+ADD ${SRC_DIR}/src/setup_ws.sh   ${INST_SCRIPTS}/setup_ws.sh  
 RUN chmod a+x ${INST_SCRIPTS}/setup_ws.sh
 USER root
 RUN $INST_SCRIPTS/setup_ws.sh  
@@ -44,7 +48,6 @@ RUN $INST_SCRIPTS/setup_ws.sh
 USER root
 RUN rm -rf /var/lib/apt/lists/*
 RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
-
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
