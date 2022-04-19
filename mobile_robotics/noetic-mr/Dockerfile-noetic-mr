@@ -1,4 +1,7 @@
-FROM robotics:base
+FROM tuw:noetic
+
+ENV INST_SCRIPTS=/tmp
+ENV SRC_DIR=./noetic-mr
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
@@ -6,10 +9,9 @@ ARG MY_HOME=/home/${MY_USER}
 ARG ROS_DISTRO=noetic
 ENV MY_USER ${MY_USER}
 ENV MR_DIR /home/${MY_USER}/projects/mr
-ENV INST_SCRIPTS=/tmp
 
 USER root
-ADD ./src/ ${INST_SCRIPTS}/
+ADD ${SRC_DIR}/src/ ${INST_SCRIPTS}/
 RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
 
 
@@ -19,9 +21,9 @@ RUN $INST_SCRIPTS/install_ros.sh
 
 USER ${MY_USER}
 RUN mkdir -p ${MR_DIR}/src/
-COPY ./utils/kdev.tar.gz ${MR_DIR}/src/
-COPY ./utils/stage_ros-20.04.tar.gz ${MR_DIR}/src/
-COPY ./utils/mr2021.tar.gz ${MR_DIR}/src/
+COPY ${SRC_DIR}/utils/kdev.tar.gz ${MR_DIR}/src/
+COPY ${SRC_DIR}/utils/stage_ros-20.04.tar.gz ${MR_DIR}/src/
+COPY ${SRC_DIR}/utils/mr2021.tar.gz ${MR_DIR}/src/
 RUN cd ${MR_DIR}/src &&  \
 	tar -xzvf kdev.tar.gz &&  \
 	tar -xzvf mr2021.tar.gz  &&  \

@@ -1,19 +1,19 @@
-# mr2021
+# tuw:noetic-mr
 Image this image is used for the mobile robotics lecture
 
 ```
-docker build -t robotics:mr2021 .
+docker build -f Dockerfile-noetic-mr -t tuw:noetic-mr .
 ```
 
 Then, run it:
 ```
-docker run --privileged -ti --network="host" robotics:mr2021
+docker run --privileged -ti --network="host" --env="DISPLAY" tuw:noetic-mr
 ```
 
 Create a permanent container
 ```
-export NAME=mr
-export IMAGE=robotics:mr2021
+export NAME=noetic-mr
+export IMAGE=tuw:$NAME
 docker create --name $NAME --privileged --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  $IMAGE
 docker container start $NAME
 docker container exec -it $NAME bash
