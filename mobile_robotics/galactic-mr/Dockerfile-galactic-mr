@@ -17,17 +17,23 @@ RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
 USER root
 RUN apt-get update
 RUN $INST_SCRIPTS/install_stage.sh  
-RUN $INST_SCRIPTS/install_stage_ros2.sh  
 
 USER ${MY_USER}
+RUN mkdir -p ${MR_DIR}/src/
+COPY ${SRC_DIR}/utils/vscode.tar.gz ${MY_HOME}/ros2_ws
+RUN cd ${MY_HOME}/ros2_ws && tar -xzvf *.tar.gz
+	
 RUN mkdir -p ${MR_DIR}/src/
 	
 RUN $INST_SCRIPTS/setup_mr.sh  
 
 RUN echo "tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
 RUN echo "colcon build" >> ~/.bash_history
+RUN echo "source $HOME/ros2_ws/install/setup.bash" >> ~/.bash_history
+RUN echo "ros2 run stage_ros stageros $HOME/ros2_ws/src/world/willow-erratic.world" >> ~/.bash_history
 RUN echo "ros2 run rqt_reconfigure rqt_reconfigure" >> ~/.bash_history
-
+RUN echo "find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +" >> ~/.bash_history
+RUN echo "find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +" >> ~/.bash_history
 # clean apt
 USER root
 RUN rm -rf /var/lib/apt/lists/*
