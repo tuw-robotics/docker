@@ -1,6 +1,6 @@
 # tuw:noetic-mr
 ## Precondition
-Build the tuw:noetic image first
+Build the [tuw:noetic](../../base) base image first
 ## Creating Container
 Image this image is used for the mobile robotics lecture
 
