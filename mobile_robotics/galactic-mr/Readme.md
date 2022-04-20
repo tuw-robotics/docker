@@ -10,7 +10,7 @@ docker build -f Dockerfile-galactic-mr -t tuw:galactic-mr .
 
 Then, run it:
 ```
-docker run --privileged -ti --network="host" --env="DISPLAY" -v $HOME/.ssh:/home/robot/.ssh:ro tuw:galactic-mr
+docker run --privileged -ti --network="host" --env="DISPLAY" --hostname=galactic-mr -v $HOME/.ssh:/home/robot/.ssh:ro tuw:galactic-mr
 ```
 
 Create a permanent container
