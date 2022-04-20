@@ -35,7 +35,7 @@ RUN echo "tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -
 RUN echo "catkin_make -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history
 RUN echo "rosrun rqt_reconfigure rqt_reconfigure" >> ~/.bash_history
 RUN echo "roslaunch stage_ros world.launch world:=cave.world" >> ~/.bash_history
-RUN echo "roslaunch mr_local_planner planner_multi.launch stage:=1 world:=cave.world mode:=1" >> ~/.bash_history
+RUN echo "roslaunch mr_local_planner planner.launch stage:=1 world:=cave.world mode:=1" >> ~/.bash_history
 RUN echo "rm -rf ${MR_DIR}/src/mr* && git clone git@github.com:mx-teaching/mr-20.04.git ${MR_DIR}/src/mr" >> ~/.bash_history
 
 # clean apt

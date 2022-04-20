@@ -15,9 +15,9 @@ docker run --privileged -ti --network="host" --hostname=noetic-mr --env="DISPLAY
 
 Create a permanent container
 ```
-export NAME=noetic-mr
-export IMAGE=tuw:$NAME
-docker create --name $NAME --privileged --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  $IMAGE
+export NAME=my_mr
+export IMAGE=tuw:noetic-mr
+docker create --name $NAME --privileged --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  --env="DISPLAY" -v $HOME/.ssh:/home/robot/.ssh:ro  $IMAGE
 docker container start $NAME
 docker container exec -it $NAME bash
 ```

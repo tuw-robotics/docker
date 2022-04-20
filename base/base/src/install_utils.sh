@@ -6,6 +6,7 @@ echo "install bash tools"
 
 apt-get install -y     \
       openssh-server   \
+      keychain         \
       cmake            \
       cmake-curses-gui \
       vim              \
