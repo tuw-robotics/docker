@@ -32,8 +32,7 @@ RUN echo "colcon build" >> ~/.bash_history
 RUN echo "source $HOME/ros2_ws/install/setup.bash" >> ~/.bash_history
 RUN echo "ros2 run stage_ros stageros $HOME/ros2_ws/src/world/willow-erratic.world" >> ~/.bash_history
 RUN echo "ros2 run rqt_reconfigure rqt_reconfigure" >> ~/.bash_history
-RUN echo "find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +" >> ~/.bash_history
-RUN echo "find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +" >> ~/.bash_history
+
 # clean apt
 USER root
 RUN rm -rf /var/lib/apt/lists/*
