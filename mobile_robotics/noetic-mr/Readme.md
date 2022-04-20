@@ -10,7 +10,7 @@ docker build -f Dockerfile-noetic-mr -t tuw:noetic-mr .
 
 Then, run it:
 ```
-docker run --privileged -ti --network="host" --env="DISPLAY" tuw:noetic-mr
+docker run --privileged -ti --network="host" --hostname=noetic-mr --env="DISPLAY" -v $HOME/.ssh:/home/robot/.ssh:ro tuw:noetic-mr
 ```
 
 Create a permanent container
