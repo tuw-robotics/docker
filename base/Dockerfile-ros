@@ -56,6 +56,9 @@ RUN code  --install-extension ms-vscode.cmake-tools
 RUN code  --install-extension ms-python.python
 #RUN code  --install-extension nonanonno.vscode-ros2
 #RUN code  --install-extension platformio.platformio-ide
+RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
+RUN echo "find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +" >> ~/.bash_history
+RUN echo "find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +" >> ~/.bash_history
 
 # clean apt
 USER root
