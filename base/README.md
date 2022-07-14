@@ -5,7 +5,7 @@ It is equipped with the ros basics as well as some basic bash tools.
 
 Optional it can be equipped with an SSH server, a VNC server and an IDE / editor (VS Code, Geany, KDevelop)
 
-The container serves as base for  tuw-robotics docker containers such as:
+The container serves as base for tuw-robotics docker containers such as:
 * [Race_Car](../car)
 * [Gazebo](../gazebo)
 * [iwos](../iwos)
@@ -13,7 +13,7 @@ The container serves as base for  tuw-robotics docker containers such as:
 * [MPN](../mpn)
 * [Multi Robot Route Planner](../tuw_multi_robot)
 
-## Creating Container
+## Building the Container
 Set a ROS distro. Currently, the following are supported:
 ROS1:
 - noetic (`export ROS_DISTRO=noetic`)
@@ -22,9 +22,8 @@ ROS2:
 
 To build the container:
 ```bash
-docker build -t tuw:$ROS_DISTRO . \
-  --build-arg ROS_DISTRO=$ROS_DISTRO \
-  --build-arg MY_PASSWORD=password
+docker build -t tuw_docker:tuw_${ROS_DISTRO}_base . \
+  --build-arg ROS_DISTRO=$ROS_DISTRO
 ```
 Note: that the password is required to login to the container.
 
@@ -42,15 +41,18 @@ The following build arguments are available:
 - `MY_GID`: group id (default: `1000`)
 - `TZ`: timezone (default: `Europe/Vienna`)
 
+## Running the Container
+
 To run the container:
 ```bash
-docker run --privileged -ti --hostname=ros --network="host"  --env="DISPLAY" tuw:$ROS_DISTRO
+export NAME="tuw_${ROS_DISTRO}_base"
+docker run --name ${NAME} --privileged -ti --hostname=ros --add-host ${NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${NAME}
 ```
 
 Create a permanent container
 ```bash
-export NAME=$ROS_DISTRO
-docker create --name $NAME --privileged --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  tuw:$ROS_DISTRO
-docker container start $NAME
-docker container exec -it $NAME bash
+export NAME="tuw_${ROS_DISTRO}_base"
+docker create --name ${NAME} --privileged -ti --hostname=ros --add-host ${NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${NAME}
+docker container start ${NAME}
+docker container exec -it ${NAME} bash
 ```
