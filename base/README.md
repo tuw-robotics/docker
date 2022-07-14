@@ -22,7 +22,8 @@ ROS2:
 
 To build the container:
 ```bash
-docker build -t tuw_docker:tuw_${ROS_DISTRO}_base . \
+export CONTAINER_NAME="tuw_${ROS_DISTRO}_base"
+docker build -t tuw_docker:${CONTAINER_NAME} . \
   --build-arg ROS_DISTRO=$ROS_DISTRO
 ```
 Note: that the password is required to login to the container.
@@ -43,16 +44,16 @@ The following build arguments are available:
 
 ## Running the Container
 
-To run the container:
+Run the container:
 ```bash
-export NAME="tuw_${ROS_DISTRO}_base"
-docker run --name ${NAME} --privileged -ti --hostname=ros --add-host ${NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${NAME}
+export CONTAINER_NAME="tuw_${ROS_DISTRO}_base"  # if not already set
+docker run --name ${CONTAINER_NAME} --privileged -ti --hostname=ros --add-host ${CONTAINER_NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${CONTAINER_NAME}
 ```
 
 Create a permanent container
 ```bash
-export NAME="tuw_${ROS_DISTRO}_base"
-docker create --name ${NAME} --privileged -ti --hostname=ros --add-host ${NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${NAME}
-docker container start ${NAME}
-docker container exec -it ${NAME} bash
+export CONTAINER_NAME="tuw_${ROS_DISTRO}_base"  # if not already set
+docker create --name ${CONTAINER_NAME} --privileged -ti --hostname=ros --add-host ${CONTAINER_NAME}:127.0.0.1 --network="host" --env="DISPLAY" tuw_docker:${CONTAINER_NAME}
+docker container start ${CONTAINER_NAME}
+docker container exec -it ${CONTAINER_NAME} bash
 ```
