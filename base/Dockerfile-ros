@@ -7,8 +7,8 @@ ARG INSTALL_IDE=true
 FROM osrf/ros:${ROS_DISTRO}-desktop
 RUN echo "ROS_DISTRO is on ${ROS_DISTRO}"
 
-ENV INST_SCRIPTS=/tmp
-ENV SRC_DIR=./base
+ENV SCRIPTS_DIR=./scripts
+ENV INSTALL_DIR=/tmp
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot
@@ -28,31 +28,31 @@ RUN apt-get update && apt-get -y upgrade
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get install -y locales apt-utils
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-COPY ${SRC_DIR}/utils/keyboard /etc/default/keyboard
+COPY ${SCRIPTS_DIR}/utils/keyboard /etc/default/keyboard
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; locale-gen
 
 # Add user
-ADD ${SRC_DIR}/src/add_user.sh ${INST_SCRIPTS}/add_user.sh
-RUN chmod a+x ${INST_SCRIPTS}/add_user.sh
-RUN $INST_SCRIPTS/add_user.sh 
+ADD ${SCRIPTS_DIR}/src/add_user.sh ${INSTALL_DIR}/add_user.sh
+RUN chmod a+x ${INSTALL_DIR}/add_user.sh
+RUN $INSTALL_DIR/add_user.sh
 
 # Install VNC-Server
 USER root
-COPY ${SRC_DIR}/src/install_turbovnc.sh ${INST_SCRIPTS}/install_turbovnc.sh
-RUN chmod a+x ${INST_SCRIPTS}/install_turbovnc.sh
-RUN if [ -z ${INSTALL_VNC} ]; then $INST_SCRIPTS/install_turbovnc.sh; fi
+COPY ${SCRIPTS_DIR}/install/install_turbovnc.sh ${INSTALL_DIR}/install_turbovnc.sh
+RUN chmod a+x ${INSTALL_DIR}/install_turbovnc.sh
+RUN if [ -z ${INSTALL_VNC} ]; then $INSTALL_DIR/install_turbovnc.sh; fi
 
 # Install some utils like vim, tmux, git, ...
 USER root
-ADD ${SRC_DIR}/src/install_utils.sh ${INST_SCRIPTS}/install_utils.sh
-RUN chmod a+x ${INST_SCRIPTS}/install_utils.sh
-RUN $INST_SCRIPTS/install_utils.sh
+ADD ${SCRIPTS_DIR}/install/install_utils.sh ${INSTALL_DIR}/install_utils.sh
+RUN chmod a+x ${INSTALL_DIR}/install_utils.sh
+RUN $INSTALL_DIR/install_utils.sh
 
 # Install IDE
 USER root
-COPY ${SRC_DIR}/src/install_ide.sh ${INST_SCRIPTS}/install_ide.sh
-RUN chmod a+x ${INST_SCRIPTS}/install_ide.sh
-RUN if [ -z ${INSTALL_IDE} ]; then $INST_SCRIPTS/install_ide.sh; fi
+COPY ${SCRIPTS_DIR}/install/install_ide.sh ${INSTALL_DIR}/install_ide.sh
+RUN chmod a+x ${INSTALL_DIR}/install_ide.sh
+RUN if [ -z ${INSTALL_IDE} ]; then $INSTALL_DIR/install_ide.sh; fi
 
 USER ${MY_USER}
 

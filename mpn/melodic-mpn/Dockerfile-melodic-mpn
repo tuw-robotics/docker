@@ -82,7 +82,7 @@ RUN apt-get install -y  \
     ros-${ROS_DISTRO}-laser-filters \
     ros-${ROS_DISTRO}-bfl \
     ros-${ROS_DISTRO}-cv-bridge \
-    ros-${ROS_DISTRO}-move-base-msgs \
+    ros-${ROS_DISTRO}-move-scripts-msgs \
     ros-${ROS_DISTRO}-nav-core \
     ros-${ROS_DISTRO}-navfn \
     ros-${ROS_DISTRO}-map-server \
