@@ -32,7 +32,7 @@ COPY ${SCRIPTS_DIR}/utils/keyboard /etc/default/keyboard
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; locale-gen
 
 # Add user
-ADD ${SCRIPTS_DIR}/src/add_user.sh ${INSTALL_DIR}/add_user.sh
+COPY ${SCRIPTS_DIR}/src/add_user.sh ${INSTALL_DIR}/add_user.sh
 RUN chmod a+x ${INSTALL_DIR}/add_user.sh
 RUN $INSTALL_DIR/add_user.sh
 
@@ -44,7 +44,7 @@ RUN if [ -z ${INSTALL_VNC} ]; then $INSTALL_DIR/install_turbovnc.sh; fi
 
 # Install some utils like vim, tmux, git, ...
 USER root
-ADD ${SCRIPTS_DIR}/install/install_utils.sh ${INSTALL_DIR}/install_utils.sh
+COPY ${SCRIPTS_DIR}/install/install_utils.sh ${INSTALL_DIR}/install_utils.sh
 RUN chmod a+x ${INSTALL_DIR}/install_utils.sh
 RUN $INSTALL_DIR/install_utils.sh
 
