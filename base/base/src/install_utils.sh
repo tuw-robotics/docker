@@ -5,7 +5,6 @@ set -e
 echo "install bash tools"
 
 apt-get install -y     \
-      openssh-server   \
       keychain         \
       cmake            \
       cmake-curses-gui \
@@ -19,15 +18,7 @@ apt-get install -y     \
       git              \
       myrepos
 
-
-# Allow root user to login over ssh on port 2222
-sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
-
-
-
 cd ${MY_HOME}
-
-
 
 echo "set -g mouse on
 set-option -g history-limit 100000

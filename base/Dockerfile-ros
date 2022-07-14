@@ -1,7 +1,11 @@
 ARG ROS_DISTRO=noetic
+
+ARG INSTALL_SSH=true
+ARG INSTALL_VNC=true
+ARG INSTALL_IDE=true
+
 FROM osrf/ros:${ROS_DISTRO}-desktop
 RUN echo "ROS_DISTRO is on ${ROS_DISTRO}"
-
 
 ENV INST_SCRIPTS=/tmp
 ENV SRC_DIR=./base
@@ -18,11 +22,11 @@ ENV MY_USER=${MY_USER}
 ENV MY_HOME=/home/${MY_USER}
 
 USER root
-RUN apt update && apt -y upgrade
+RUN apt-get update && apt-get -y upgrade
 
 # Install locale and set
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt install -y locales apt-utils
+RUN apt-get install -y locales apt-utils
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY ${SRC_DIR}/utils/keyboard /etc/default/keyboard
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen; locale-gen
@@ -32,11 +36,11 @@ ADD ${SRC_DIR}/src/add_user.sh ${INST_SCRIPTS}/add_user.sh
 RUN chmod a+x ${INST_SCRIPTS}/add_user.sh
 RUN $INST_SCRIPTS/add_user.sh 
 
-# Add VNC-Server
+# Install VNC-Server
 USER root
-ADD ${SRC_DIR}/src/install_turbovnc.sh ${INST_SCRIPTS}/install_turbovnc.sh
+COPY ${SRC_DIR}/src/install_turbovnc.sh ${INST_SCRIPTS}/install_turbovnc.sh
 RUN chmod a+x ${INST_SCRIPTS}/install_turbovnc.sh
-RUN $INST_SCRIPTS/install_turbovnc.sh  
+RUN if [ -z ${INSTALL_VNC} ]; then $INST_SCRIPTS/install_turbovnc.sh; fi
 
 # Install some utils like vim, tmux, git, ...
 USER root
@@ -44,18 +48,14 @@ ADD ${SRC_DIR}/src/install_utils.sh ${INST_SCRIPTS}/install_utils.sh
 RUN chmod a+x ${INST_SCRIPTS}/install_utils.sh
 RUN $INST_SCRIPTS/install_utils.sh
 
-# Install programming enviroments 
+# Install IDE
 USER root
-ADD ${SRC_DIR}/src/install_ide.sh ${INST_SCRIPTS}/install_ide.sh
+COPY ${SRC_DIR}/src/install_ide.sh ${INST_SCRIPTS}/install_ide.sh
 RUN chmod a+x ${INST_SCRIPTS}/install_ide.sh
-RUN $INST_SCRIPTS/install_ide.sh  
+RUN if [ -z ${INSTALL_IDE} ]; then $INST_SCRIPTS/install_ide.sh; fi
 
 USER ${MY_USER}
-RUN code  --install-extension ms-vscode.cpptools
-RUN code  --install-extension ms-vscode.cmake-tools
-RUN code  --install-extension ms-python.python
-#RUN code  --install-extension nonanonno.vscode-ros2
-#RUN code  --install-extension platformio.platformio-ide
+
 RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
 RUN echo "find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +" >> ~/.bash_history
 RUN echo "find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +" >> ~/.bash_history
