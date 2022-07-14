@@ -12,11 +12,9 @@ usermod -aG sudo ${MY_USER}
 usermod -aG dialout ${MY_USER}
 echo "${MY_USER}:${MY_PASSWORD}" | chpasswd
 
-# Optimize bashrc
+# optimize bashrc
 sed -i 's/HISTSIZE=1000/HISTSIZE=20000/g' ${MY_HOME}/.bashrc  && \
 sed -i 's/HISTFILESIZE=2000/HISTFILESIZE=40000/g' ${MY_HOME}/.bashrc
 
-# Remove sudo msg
+# remove sudo msg
 touch ${MY_HOME}/.sudo_as_admin_successful
-
-chown ${uid}:${gid} -R ${MY_HOME}

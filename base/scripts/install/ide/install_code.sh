@@ -2,12 +2,8 @@
 ### every exit != 0 fails the script
 set -e
 
-echo "Install Kdevelop and VSCode"
+echo "Install VSCode"
 
-apt-get install -y kdevelop
-apt-get install -y geany
-
-# VS Code 
 apt-get install -y  wget apt-transport-https software-properties-common
 wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"

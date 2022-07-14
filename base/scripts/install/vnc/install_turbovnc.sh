@@ -28,5 +28,3 @@ echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Su
 
 echo "/opt/TurboVNC/bin/vncserver -kill :1" >> ${MY_HOME}/.bash_history
 echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ${MY_HOME}/.bash_history
-
-chown -R ${MY_USER}:${MY_USER} ${MY_HOME}

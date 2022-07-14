@@ -2,7 +2,7 @@
 ### every exit != 0 fails the script
 set -e
 
-echo "Install SSH"
+echo "Install SSH server"
 
 # Install libraries/dependencies
 RUN apt-get install -y openssh-server
