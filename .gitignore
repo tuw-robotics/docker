@@ -1,1 +1,5 @@
+# VS Code
 *.code-workspace
+
+# Jetbrains IDEs
+/.idea
