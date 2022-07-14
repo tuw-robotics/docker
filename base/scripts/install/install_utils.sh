@@ -5,33 +5,15 @@ set -e
 echo "install bash tools"
 
 apt-get install -y     \
-      keychain         \
       cmake            \
       cmake-curses-gui \
-      vim              \
-      nano             \
-      wget             \
-      tmux             \
-      rsync            \
       curl             \
-      gnupg2           \
       git              \
-      myrepos
-
-cd ${MY_HOME}
-
-echo "set -g mouse on
-set-option -g history-limit 100000
-# remap prefix from 'C-b' to 'C-a'
-# unbind C-b
-# set-option -g prefix C-a
-# bind-key C-a send-prefix
-# switch panes using Alt-arrow without prefix
-bind -n M-Left select-pane -L
-bind -n M-Right select-pane -R
-bind -n M-Up select-pane -U
-bind -n M-Down select-pane -D
-# switch colour
-set -g default-terminal \"screen-256color\"" >> ${MY_HOME}/.tmux.conf
-
-chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
+      gnupg2           \
+      keychain         \
+      myrepos          \
+      nano             \
+      rsync            \
+      tmux             \
+      vim              \
+      wget
