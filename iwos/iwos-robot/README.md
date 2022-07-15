@@ -2,12 +2,12 @@
 Image for the iwos development
 
 ```
-docker build -t tuw:iwos .
+docker build -t tuw_docker:tuw_noetic_iwos .
 ```
 
 Then, run it:
 ```
-docker run --privileged -ti --network="host" --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 robotics:iwos
+docker run --privileged -ti --network="host" --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 tuw_docker:tuw_noetic_iwos
 ```
 
 In order to give access to the gamepad run the following command in the container (the default password is `xyz`):
