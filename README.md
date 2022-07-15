@@ -55,7 +55,7 @@ docker container rm -f <container_name>
 #### Delete all stopped containers
 To delete all stopped containers:
 ```bash
-docker contaier rm $(docker container ls -a -q -f status=exited)
+docker container rm $(docker container ls -a -q -f status=exited)
 ```
 
 ### Moving docker data container
