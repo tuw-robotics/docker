@@ -76,6 +76,11 @@ Then you can push the image to DockerHub:
 docker push <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
 ```
 
+After the image has been pushed to DockerHub it can be pulled with:
+```bash
+docker pull <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+```
+
 ### Moving docker data container
 ```
 sudo service docker stop
