@@ -58,6 +58,24 @@ To delete all stopped containers:
 docker container rm $(docker container ls -a -q -f status=exited)
 ```
 
+### Pushing an image to DockerHub
+[DockerHub](https://hub.docker.com/) is a registry for Docker images.
+Firstly, you need a DockerHub account (create the account in the DockerHub webinterface).
+Login to DockerHub in your shell:
+```bash
+docker login
+```
+Secondly, you need a repository in your DockerHub (create the repository in the DockerHub webinterface).
+Thidly, you need to tag the image in order to push it to DockerHub:
+```bash
+```bash
+docker tag <image_name> <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+```
+Then you can push the image to DockerHub:
+```bash
+docker push <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+```
+
 ### Moving docker data container
 ```
 sudo service docker stop
