@@ -13,6 +13,8 @@ apt-get install -y     \
       keychain         \
       myrepos          \
       nano             \
+      python3          \
+      python3-pip      \
       rsync            \
       tmux             \
       vim              \
