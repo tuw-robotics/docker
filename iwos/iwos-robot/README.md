@@ -1,25 +1,15 @@
 # tuw-iwos
-Image for the iwos development
 
-```
+This image is for the development of the IWOS robot.
+To build this image run:
+```bash
 docker build -t tuw_docker:tuw_noetic_iwos .
 ```
 
-Then, run it:
+In order to start a container with this image run:
 ```
 docker run --privileged -ti --network="host" --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 tuw_docker:tuw_noetic_iwos
 ```
 
-In order to give access to the gamepad run the following command in the container (the default password is `xyz`):
-```
-sudo chmod 777 /dev/input/js0
-```
-
-Create a permanent container
-```
-export NAME=ros
-export IMAGE=robot:iwos
-docker create --name $NAME --privileged --hostname=$NAME --add-host $NAME:127.0.0.1  --interactive  --network="host"  $IMAGE
-docker container start $NAME
-docker container exec -it $NAME bash
-```
+## Image repository
+The base image and the iwos image (which build on the base image) are pushed to dockerhub in [this](https://hub.docker.com/repository/docker/ekrobotics/robotics) repository.

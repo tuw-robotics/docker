@@ -66,19 +66,20 @@ Login to DockerHub in your shell:
 docker login
 ```
 Secondly, you need a repository in your DockerHub (create the repository in the DockerHub webinterface).
-Thidly, you need to tag the image in order to push it to DockerHub:
+Thirdly, you need to tag the image in order to push it to DockerHub:
 ```bash
-```bash
-docker tag <image_name> <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+docker tag <repository>:<image_tag> <dockerhub_account_name>/<dockerhub_repository_name>:<image_tag>
 ```
+Note: the default `repository` is `tuw_docker`.
+
 Then you can push the image to DockerHub:
 ```bash
-docker push <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+docker push <dockerhub_account_name>/<dockerhub_repository_name>:<image_tag>
 ```
 
 After the image has been pushed to DockerHub it can be pulled with:
 ```bash
-docker pull <dockerhub_account_name>/<dockerhub_repository_name>:<tag>
+docker pull <dockerhub_account_name>/<dockerhub_repository_name>:<image_tag>
 ```
 
 ### Moving docker data container
