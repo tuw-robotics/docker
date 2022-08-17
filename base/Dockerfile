@@ -14,11 +14,6 @@ ARG TZ=Europe/Vienna
 ENV MY_USER=${MY_USER}
 ENV MY_HOME=/home/${MY_USER}
 
-ARG INSTALL_CODE=true
-ARG INSTALL_GEANY=true
-ARG INSTALL_KDEVELOP=true
-ARG INSTALL_SSH=true
-ARG INSTALL_VNC=true
 
 ENV CONFIG_DIR=./config
 ENV SCRIPTS_DIR=./scripts
@@ -53,15 +48,20 @@ RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
 # install utils (like git, vim, nano, ...)
 RUN $INSTALL_DIR/install/install_utils.sh
 # install Code (optinal: argument install_code)
-RUN if [ -z ${INSTALL_CODE} ]; then $INSTALL_DIR/install/ide/install_code.sh; fi
+ARG INSTALL_CODE=true
+RUN if [ "$INSTALL_CODE" = "true" ]; then $INSTALL_DIR/install/ide/install_code.sh; fi
 # install Geany (optinal: argument install_geany)
-RUN if [ -z ${INSTALL_GEANY} ]; then $INSTALL_DIR/install/ide/install_geany.sh; fi
+ARG INSTALL_GEANY=true
+RUN if [ "$INSTALL_GEANY" = "true" ]; then $INSTALL_DIR/install/ide/install_geany.sh; fi
 # install KDE-Develop (optinal: argument install_kdevelop)
-RUN if [ -z ${INSTALL_KDEVELOP} ]; then $INSTALL_DIR/install/ide/install_kdevelop.sh; fi
+ARG INSTALL_KDEVELOP=true
+RUN if [ "$INSTALL_KDEVELOP" = "true" ]; then $INSTALL_DIR/install/ide/install_kdevelop.sh; fi
 # install VNC (optinal: argmunet install_ssh)
-RUN if [ -z ${INSTALL_SSH} ]; then $INSTALL_DIR/install/vnc/install_sshc.sh; fi
+ARG INSTALL_SSH=true
+RUN if [ "$INSTALL_SSH" = "true" ]; then $INSTALL_DIR/install/vnc/install_sshc.sh; fi
 # install VNC (optinal: argmunet install_vnc)
-RUN if [ -z ${INSTALL_VNC} ]; then $INSTALL_DIR/install/vnc/install_turbovnc.sh; fi
+ARG INSTALL_VNC=true
+RUN if [ "$INSTALL_VNC" = "true"  ]; then $INSTALL_DIR/install/vnc/install_turbovnc.sh; fi
 
 USER ${MY_USER}
 
