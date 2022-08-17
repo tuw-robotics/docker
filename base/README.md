@@ -23,8 +23,7 @@ Set a ROS distro. Currently, the following are supported:
 To build the container:
 ```bash
 export CONTAINER_NAME="tuw_${ROS_DISTRO}_base"
-docker build -t tuw_docker:${CONTAINER_NAME} . \
-  --build-arg ROS_DISTRO=$ROS_DISTRO
+docker build -t tuw_docker:${CONTAINER_NAME} .  --build-arg ROS_DISTRO=$ROS_DISTRO
 ```
 Note: that the password is required to login to the container.
 
