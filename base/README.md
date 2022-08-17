@@ -15,10 +15,10 @@ The container serves as base for tuw-robotics docker containers such as:
 
 ## Building the Container
 Set a ROS distro. Currently, the following are supported:
-ROS1:
-- noetic (`export ROS_DISTRO=noetic`)
-ROS2:
-- galactic (`export ROS_DISTRO=galactic`)
+- ROS1:
+  - noetic (`export ROS_DISTRO=noetic`)
+- ROS2:
+  - galactic (`export ROS_DISTRO=galactic`)
 
 To build the container:
 ```bash
