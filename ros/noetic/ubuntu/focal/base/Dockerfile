@@ -1,6 +1,8 @@
-# This is an auto generated Dockerfile for ros:ros-base
-# generated from docker_images/create_ros_image.Dockerfile.em
-ARG OWNER=ros
+# ros1 base
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+# based on the https://github.com/osrf/docker_images
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
 ARG BASE_CONTAINER=$OWNER/noetic-core
 FROM $BASE_CONTAINER
 

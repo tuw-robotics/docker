@@ -1,7 +1,9 @@
-# This is an auto generated Dockerfile for ros:desktop
-# generated from docker_images/create_ros_image.Dockerfile.em
-ARG OWNER=ros
-ARG BASE_CONTAINER=$OWNER/noetic-core
+# ros1 desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+# based on the https://github.com/osrf/docker_images
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
+ARG BASE_CONTAINER=$OWNER/noetic-base
 FROM $BASE_CONTAINER
 
 # install ros packages
