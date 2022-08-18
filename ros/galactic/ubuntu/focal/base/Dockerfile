@@ -2,7 +2,7 @@
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # based on the https://github.com/osrf/docker_images
 
-ARG ROOT_CONTAINER=ubuntu:focal
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
 ARG BASE_CONTAINER=$OWNER/galactic-core
 FROM $BASE_CONTAINER
 

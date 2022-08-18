@@ -20,24 +20,24 @@ login:
 	
 build:
 	@docker build -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/focal/core/.
-	# @docker build -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
-	# @docker build -t $(OWNER)/$(ROS_DISTRO)-bridge            --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
-	# @docker build -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
+	@docker build -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
+	@docker build -t $(OWNER)/$(ROS_DISTRO)-bridge           --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
+	@docker build -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core
 	@docker push $(OWNER)/$(ROS_DISTRO)-base
 	@docker push $(OWNER)/$(ROS_DISTRO)-bridge
-	# @docker pull $(OWNER)/$(ROS_DISTRO)-desktop
+	@docker push $(OWNER)/$(ROS_DISTRO)-desktop
 	
 pull:
 	@docker pull $(OWNER)/$(ROS_DISTRO)-core
 	@docker pull $(OWNER)/$(ROS_DISTRO)-base
 	@docker pull $(OWNER)/$(ROS_DISTRO)-bridge
-	# @docker pull $(OWNER)/$(ROS_DISTRO)-desktop
+	@docker pull $(OWNER)/$(ROS_DISTRO)-desktop
 
 clean:
 	@docker rmi -f $(OWNER)/$(ROS_DISTRO)-core
 	@docker rmi -f $(OWNER)/$(ROS_DISTRO)-base
 	@docker rmi -f $(OWNER)/$(ROS_DISTRO)-bridge
-	# @docker rmi -f $(OWNER)/$(ROS_DISTRO)-desktop
+	@docker rmi -f $(OWNER)/$(ROS_DISTRO)-desktop

@@ -30,9 +30,9 @@ push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core
 	@docker push $(OWNER)/$(ROS_DISTRO)-base
 	@docker push $(OWNER)/$(ROS_DISTRO)-robot
-	# @docker pull $(OWNER)/$(ROS_DISTRO)-perception
-	# @docker pull $(OWNER)/$(ROS_DISTRO)-desktop
-	# @docker pull $(OWNER)/$(ROS_DISTRO)-desktop-full
+	# @docker push $(OWNER)/$(ROS_DISTRO)-perception
+	# @docker push $(OWNER)/$(ROS_DISTRO)-desktop
+	# @docker push $(OWNER)/$(ROS_DISTRO)-desktop-full
 	
 pull:
 	@docker pull $(OWNER)/$(ROS_DISTRO)-core
