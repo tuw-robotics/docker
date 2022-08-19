@@ -2,7 +2,7 @@
 
 This repository contains the Dockerfiles and according scripts for the tuw_docker images.
 
-<img src="./uml-container.draw.io.svg" height="600">
+<img src="./uml-container.draw.io.svg" height="300">
 
 ## Containers
 Check out the `README.md` for the container you are interested in.
