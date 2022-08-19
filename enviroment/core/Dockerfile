@@ -3,8 +3,8 @@
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG BASE_CONTAINER=$OWNER/noetic-desktop
-FROM $BASE_CONTAINER
+ARG ROOT_CONTAINER=$OWNER/noetic-desktop
+FROM $ROOT_CONTAINER
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot

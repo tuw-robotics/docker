@@ -2,6 +2,9 @@
 
 This repository contains the Dockerfiles and according scripts for the tuw_docker images.
 
+![Alt text](./uml-container.draw.io.svg)
+<img src="./uml-container.draw.io.svg">
+
 ## Containers
 Check out the `README.md` for the container you are interested in.
 The base container is designed to work either for ROS1 or ROS2 and has some basic tools  installed.

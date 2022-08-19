@@ -27,7 +27,7 @@ Checkout the Makefile and run
 - `make run`                --> runs an images
 
 
-## Build docker images with by hand
+## Build docker images by hand
 Set a ROS distro. Currently, the following are supported:
 - ROS1:
   - noetic (`export ROS_DISTRO=noetic`)
@@ -38,13 +38,12 @@ To build the container:
 ```bash
 
 export ROS_DISTRO=noetic
-export OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/${ROS_DISTRO}
+export OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
 export ROOT_CONTAINER=${OWNER}/noetic-desktop        
 # export ROOT_CONTAINER=osrf/ros:${ROS_DISTRO}-desktop
 
 docker build -t ${OWNER}/${ROS_DISTRO}/enviroment-core    core/.    \
    --build-arg ROOT_CONTAINER=${ROOT_CONTAINER} \
-   --build-arg ROS_DISTRO=${noetic} \
    --build-arg MY_USER=robot \
    --build-arg MY_NAME=Robot \
    --build-arg MY_PASSWORD=xyz \
@@ -55,13 +54,12 @@ docker build -t ${OWNER}/${ROS_DISTRO}/enviroment-core    core/.    \
 docker build -t $(OWNER)/$(ROS_DISTRO)/enviroment-desktop desktop/.  \
    --build-arg OWNER=${OWNER} \
    --build-arg ROS_DISTRO=${noetic} \
-   --build-arg INSTALL_VNC=true \
-   --build-arg INSTALL_KDEVELOP=false 
+   --build-arg INSTALL_VNC=true
    
 docker build -t $(OWNER)/$(ROS_DISTRO)/enviroment-ide     ide/.  \
    --build-arg OWNER=${OWNER} \
-   --build-arg ROS_DISTRO=${noetic} \
-   --build-arg INSTALL_CODE=true
+   --build-arg INSTALL_CODE=true \
+   --build-arg INSTALL_KDEVELOP=false 
    
 ```
 
