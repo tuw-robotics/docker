@@ -1,4 +1,4 @@
-# enviroment base
+# enviroment core
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
@@ -49,9 +49,24 @@ COPY ${CONFIG_DIR}/tmux/tmux.conf ${MY_HOME}/.tmux.conf
 
 RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}
 # install utils (like git, vim, nano, ...)
-RUN $INSTALL_DIR/install/install_utils.sh
-ARG INSTALL_SSH=false
-RUN if [ "$INSTALL_SSH" = "true" ]; then $INSTALL_DIR/install/vnc/install_sshc.sh; fi
+RUN apt-get install -y     \
+      cmake            \
+      cmake-curses-gui \
+      curl             \
+      git              \
+      gnupg2           \
+      keychain         \
+      myrepos          \
+      nano             \
+      python3          \
+      python3-pip      \
+      rsync            \
+      tmux             \
+      vim              \
+      wget
+      
+RUN apt-get install -y openssh-server
+RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
 
 USER ${MY_USER}
 

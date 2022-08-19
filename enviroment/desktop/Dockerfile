@@ -1,0 +1,34 @@
+# enviroment desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+# created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG BASE_CONTAINER=$OWNER/enviroment-core
+FROM $BASE_CONTAINER
+
+USER root
+
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends xubuntu-desktop geany wget dbus-x11
+RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
+
+# Remove keyboard shortcut to allow bash_completion in xfce4-terminal
+RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
+
+ENV SCRIPTS_DIR=./scripts
+ENV INSTALL_DIR=/install
+
+# copy scripts to container
+COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
+# allow to run scripts in the container
+RUN chmod -R a+x ${INSTALL_DIR}
+
+# install VNC (optinal: argmunet install_ssh)
+ARG INSTALL_VNC=true
+RUN if [ "$INSTALL_VNC" = "true" ]; then $INSTALL_DIR/install/vnc/install_turbovnc.sh; fi
+
+
+USER ${MY_USER}
+WORKDIR ${MY_HOME}
+ENV HOME=${MY_HOME}
+CMD /bin/bash

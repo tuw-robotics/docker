@@ -1,8 +1,9 @@
+
+
 ARG ROS_DISTRO=noetic
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG BASE_CONTAINER=$OWNER/noetic-desktop
-FROM $BASE_CONTAINER
+FROM osrf/ros:${ROS_DISTRO}-desktop
+RUN echo "ROS_DISTRO is on ${ROS_DISTRO}"
 
 # Replace 1000 with your user / group id
 ARG MY_USER=robot

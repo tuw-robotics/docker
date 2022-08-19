@@ -1,9 +1,9 @@
-# enviroment base
+# enviroment ide
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
-ARG BASE_CONTAINER=$OWNER/enviroment-core
+ARG BASE_CONTAINER=$OWNER/enviroment-desktop
 FROM $BASE_CONTAINER
 
 ENV SCRIPTS_DIR=./scripts
@@ -18,11 +18,8 @@ COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
 # allow to run scripts in the container
 RUN chmod -R a+x ${INSTALL_DIR}
 
-# install Geany (optinal: argument install_geany)
-ARG INSTALL_GEANY=true
-RUN if [ "$INSTALL_GEANY" = "true" ]; then $INSTALL_DIR/install/ide/install_geany.sh; fi
 # install Code (optinal: argument install_code)
-ARG INSTALL_CODE=false
+ARG INSTALL_CODE=true
 RUN if [ "$INSTALL_CODE" = "true" ]; then $INSTALL_DIR/install/ide/install_code.sh; fi
 # install KDE-Develop (optinal: argument install_kdevelop)
 ARG INSTALL_KDEVELOP=false
@@ -30,3 +27,8 @@ RUN if [ "$INSTALL_KDEVELOP" = "true" ]; then $INSTALL_DIR/install/ide/install_k
 
 USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
+
+USER ${MY_USER}
+WORKDIR ${MY_HOME}
+ENV HOME=${MY_HOME}
+CMD /bin/bash
