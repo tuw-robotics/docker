@@ -3,7 +3,7 @@
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
-ARG BASE_CONTAINER=$OWNER/enviroment-desktop
+ARG BASE_CONTAINER=$OWNER-enviroment-desktop
 FROM $BASE_CONTAINER
 
 ENV SCRIPTS_DIR=./scripts

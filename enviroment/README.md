@@ -26,6 +26,14 @@ Checkout the Makefile and run
 - `make clean`              --> remove all images
 - `make run`                --> runs an images
 
+```
+# ROS1 noetic
+make build ROS_DISTRO=noetic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic-desktop
+make push ROS_DISTRO=noetic
+make pull ROS_DISTRO=noetic
+# ROS2 galactic
+make build ROS_DISTRO=galactic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/galactic-desktop
+```
 
 ## Build docker images by hand
 Set a ROS distro. Currently, the following are supported:

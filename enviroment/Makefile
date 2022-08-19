@@ -1,6 +1,6 @@
 ROS_DISTRO = noetic
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
-ROOT_CONTAINER = ${OWNER}/noetic-desktop
+ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 
 RUN = enviroment-desktop
 
@@ -29,25 +29,26 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@echo "${ROOT_CONTAINER}"
-	@docker build -t ${OWNER}/${ROS_DISTRO}/enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
-	@docker build -t ${OWNER}/${ROS_DISTRO}/enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
-	@docker build -t ${OWNER}/${ROS_DISTRO}/enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	@docker build -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	@docker build -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+	@docker build -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
 
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}/enviroment-core
-	@docker push ${OWNER}/${ROS_DISTRO}/enviroment-base
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}/enviroment-core
-	@docker pull ${OWNER}/${ROS_DISTRO}/enviroment-base
-	@docker pull ${OWNER}/${ROS_DISTRO}-desktop-full
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}/enviroment-core
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}/enviroment-base
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 run:
-	@echo ${OWNER}/${ROS_DISTRO}/${RUN}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}/${RUN}
+	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 	
