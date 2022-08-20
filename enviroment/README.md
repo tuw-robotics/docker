@@ -33,6 +33,7 @@ make push ROS_DISTRO=noetic
 make pull ROS_DISTRO=noetic
 # ROS2 galactic
 make build ROS_DISTRO=galactic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/galactic-desktop
+make push ROS_DISTRO=galactic
 ```
 
 ## Build docker images by hand
