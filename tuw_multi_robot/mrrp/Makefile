@@ -1,8 +1,8 @@
 ROS_DISTRO = noetic
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
-ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-gui
+ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 
-RUN = mrrp-gui
+RUN = mrrp-desktop
 
 all: help
 
@@ -14,7 +14,7 @@ help:
 	@echo "     ROS_DISTRO=noetic"
 	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal"
 	@echo "     ROOT_CONTAINER=$$\$${OWNER}/noetic-ide"
-	@echo "     RUN=mrrp-gui"
+	@echo "     RUN=mrrp-desktop"
 	@echo ""
 	@echo "   make build              - build all images"
 	@echo "   make login USER=mbader  - authenticate container Registry"
@@ -29,16 +29,16 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build -f Dockerfile-mrrp -t ${OWNER}/${ROS_DISTRO}-mrrp-gui             --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-ide   .
+	@docker build -f Dockerfile-mrrp -t ${OWNER}/${ROS_DISTRO}-mrrp-desktop --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-ide   .
 
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}-mrrp-gui 
+	@docker push ${OWNER}/${ROS_DISTRO}-mrrp-desktop 
 	
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}-mrrp-gui 
+	@docker pull ${OWNER}/${ROS_DISTRO}-mrrp-desktop 
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-mrrp-gui 
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-mrrp-desktop 
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
