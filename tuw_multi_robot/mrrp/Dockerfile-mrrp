@@ -1,4 +1,7 @@
-FROM tuw:noetic
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG BASE_CONTAINER=$OWNER-enviroment-ide
+FROM $BASE_CONTAINER
 
 ENV INST_SCRIPTS=/tmp
 ENV SRC_DIR=./mrrp
@@ -22,8 +25,9 @@ RUN apt-get update &&  apt-get install -y git python3-pip
 
 # ROS 
 RUN apt-get install -y  libdxflib-dev \
+                        qtbase5-dev qtdeclarative5-dev \
 						ros-${ROS_DISTRO}-stage-ros \
-                        ros-${ROS_DISTRO}-map-server
+                        ros-${ROS_DISTRO}-map-server 
 
 USER ${MY_USER}
 RUN rosdep update
