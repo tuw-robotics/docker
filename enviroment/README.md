@@ -32,9 +32,9 @@ make build ROS_DISTRO=noetic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/do
 make push ROS_DISTRO=noetic
 make pull ROS_DISTRO=noetic
 # ROS1 melodic
-make build ROS_DISTRO=melodic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic-desktop
-make push ROS_DISTRO=melodic
-make pull ROS_DISTRO=melodic
+make build ROS_DISTRO=melodic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic-desktop OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic
+make push ROS_DISTRO=melodic OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic
+make pull ROS_DISTRO=melodic OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic
 # ROS2 galactic
 make build ROS_DISTRO=galactic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/galactic-desktop
 make push ROS_DISTRO=galactic
@@ -44,9 +44,10 @@ make pull ROS_DISTRO=galactic
 ## Build docker images by hand
 Set a ROS distro. Currently, the following are supported:
 - ROS1:
-  - noetic (`export ROS_DISTRO=noetic`)
+  - melodic (`export ROS_DISTRO=melodic`) on Ubuntu 18.04 bionic
+  - noetic (`export ROS_DISTRO=noetic`)   on Ubuntu 20.04 focal
 - ROS2:
-  - galactic (`export ROS_DISTRO=galactic`)
+  - galactic (`export ROS_DISTRO=galactic`) on Ubuntu 20.04 focal
 
 To build the container:
 ```bash
@@ -73,7 +74,7 @@ docker build -t $(OWNER)/$(ROS_DISTRO)/enviroment-desktop desktop/.  \
 docker build -t $(OWNER)/$(ROS_DISTRO)/enviroment-ide     ide/.  \
    --build-arg OWNER=${OWNER} \
    --build-arg INSTALL_CODE=true \
-   --build-arg INSTALL_KDEVELOP=false 
+   --build-arg INSTALL_KDEVELOP=true 
    
 ```
 

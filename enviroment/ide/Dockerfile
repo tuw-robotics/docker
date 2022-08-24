@@ -22,7 +22,7 @@ RUN chmod -R a+x ${INSTALL_DIR}
 ARG INSTALL_CODE=true
 RUN if [ "$INSTALL_CODE" = "true" ]; then $INSTALL_DIR/install/ide/install_code.sh; fi
 # install KDE-Develop (optinal: argument install_kdevelop)
-ARG INSTALL_KDEVELOP=false
+ARG INSTALL_KDEVELOP=true
 RUN if [ "$INSTALL_KDEVELOP" = "true" ]; then $INSTALL_DIR/install/ide/install_kdevelop.sh; fi
 
 USER root
