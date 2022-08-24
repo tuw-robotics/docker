@@ -1,0 +1,45 @@
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic
+ARG BASE_CONTAINER=$OWNER-enviroment-desktop
+FROM $BASE_CONTAINER
+
+ENV INST_SCRIPTS=/tmp
+ENV SRC_DIR=./mpn
+
+ENV PROJECT_ROOT ${MY_HOME}/projects/mpn
+
+USER root
+
+
+# Install locale and set
+RUN apt-get update &&  apt-get install -y git python3-pip 
+
+
+# ROS 
+RUN apt-get install -y  libdxflib-dev \
+                        qtbase5-dev qtdeclarative5-dev \
+						ros-${ROS_DISTRO}-stage-ros \
+                        ros-${ROS_DISTRO}-map-server 
+
+USER ${MY_USER}
+RUN rosdep update
+
+RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; attach" >> ~/.bash_history
+RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
+RUN echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ~/.bash_history
+
+USER root
+ADD ${SRC_DIR}/src/setup_ws.sh   ${INST_SCRIPTS}/setup_ws.sh  
+RUN chmod a+x ${INST_SCRIPTS}/setup_ws.sh
+USER root
+RUN $INST_SCRIPTS/setup_ws.sh  
+
+# clean apt
+USER root
+RUN rm -rf /var/lib/apt/lists/*
+#RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}/projects
+
+USER ${MY_USER}
+WORKDIR ${MY_HOME}
+ENV HOME ${MY_HOME}
+CMD /bin/bash

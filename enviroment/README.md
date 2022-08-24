@@ -31,6 +31,10 @@ Checkout the Makefile and run
 make build ROS_DISTRO=noetic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic-desktop
 make push ROS_DISTRO=noetic
 make pull ROS_DISTRO=noetic
+# ROS1 melodic
+make build ROS_DISTRO=melodic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic-desktop
+make push ROS_DISTRO=melodic
+make pull ROS_DISTRO=melodic
 # ROS2 galactic
 make build ROS_DISTRO=galactic ROOT_CONTAINER=registry.auto.tuwien.ac.at/roblab/docker/focal/galactic-desktop
 make push ROS_DISTRO=galactic
