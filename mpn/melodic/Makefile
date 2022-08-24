@@ -29,7 +29,7 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build -f Dockerfile-mpn -t ${OWNER}/${ROS_DISTRO}-mpn-desktop --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-ide   .
+	@docker build -f Dockerfile-mpn -t ${OWNER}/${ROS_DISTRO}-mpn-desktop --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-desktop   .
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-mpn-desktop 

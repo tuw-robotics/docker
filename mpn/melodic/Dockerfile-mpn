@@ -1,6 +1,6 @@
 
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic
-ARG BASE_CONTAINER=$OWNER-enviroment-desktop
+ARG BASE_CONTAINER=$OWNER-enviroment-ide
 FROM $BASE_CONTAINER
 
 ENV INST_SCRIPTS=/tmp
@@ -12,32 +12,55 @@ USER root
 
 
 # Install locale and set
-RUN apt-get update &&  apt-get install -y git python3-pip 
-
+RUN apt-get update &&  apt-get install -y git python3-pip \
+   libmgl-dev libjsoncpp-dev autoconf libncurses5-dev libdxflib-dev \
+   libgoogle-perftools-dev gperf
 
 # ROS 
-RUN apt-get install -y  libdxflib-dev \
-                        qtbase5-dev qtdeclarative5-dev \
-						ros-${ROS_DISTRO}-stage-ros \
-                        ros-${ROS_DISTRO}-map-server 
-
+RUN apt-get install -y \
+    ros-${ROS_DISTRO}-costmap-2d \
+    ros-${ROS_DISTRO}-octomap \
+    ros-${ROS_DISTRO}-octomap-msgs \
+    ros-${ROS_DISTRO}-amcl \
+    ros-${ROS_DISTRO}-laser-filters \
+    ros-${ROS_DISTRO}-bfl \
+    ros-${ROS_DISTRO}-cv-bridge \
+    ros-${ROS_DISTRO}-move-base-msgs \
+    ros-${ROS_DISTRO}-nav-core \
+    ros-${ROS_DISTRO}-navfn \
+    ros-${ROS_DISTRO}-map-server \
+    ros-${ROS_DISTRO}-xacro \
+    ros-${ROS_DISTRO}-robot-state-publisher \
+    ros-${ROS_DISTRO}-pcl-ros  \
+    ros-${ROS_DISTRO}-pcl-conversions \
+    ros-${ROS_DISTRO}-rviz \
+    ros-${ROS_DISTRO}-marker-msgs
+    
 USER ${MY_USER}
-RUN rosdep update
 
-RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; attach" >> ~/.bash_history
-RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
-RUN echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ~/.bash_history
+RUN mkdir -p ${MY_HOME}/projects/mpn/ws00/src && \
+    cd ${MY_HOME}/projects/mpn/ws00/src && \
+    git clone --branch melodic https://github.com/tuw-robotics/grid_map.git  && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_msgs.git  
+    
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${MY_HOME}/projects/mpn/ws00; catkin_make'
 
-USER root
-ADD ${SRC_DIR}/src/setup_ws.sh   ${INST_SCRIPTS}/setup_ws.sh  
-RUN chmod a+x ${INST_SCRIPTS}/setup_ws.sh
-USER root
-RUN $INST_SCRIPTS/setup_ws.sh  
+
+RUN mkdir -p ${MY_HOME}/projects/mpn/ws01/src && \
+    cd ${MY_HOME}/projects/mpn/ws01/src && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_rviz.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_agv.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_control.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_geometry.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_teleop.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_collision_alarm.git && \
+    git clone --branch master https://github.com/tuw-robotics/tuw_global_planner.git 
+    
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make'
 
 # clean apt
 USER root
 RUN rm -rf /var/lib/apt/lists/*
-#RUN chown -R ${MY_USER}:${MY_USER} ${MY_HOME}/projects
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
