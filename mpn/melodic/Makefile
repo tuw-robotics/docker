@@ -42,5 +42,5 @@ clean:
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" -v ~/.ssh:/home/robot/.ssh:ro --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 	

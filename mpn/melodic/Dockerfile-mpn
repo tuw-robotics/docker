@@ -34,14 +34,16 @@ RUN apt-get install -y \
     ros-${ROS_DISTRO}-pcl-ros  \
     ros-${ROS_DISTRO}-pcl-conversions \
     ros-${ROS_DISTRO}-rviz \
-    ros-${ROS_DISTRO}-marker-msgs
+    ros-${ROS_DISTRO}-marker-msgs \
+    ros-${ROS_DISTRO}-stage-ros
     
 USER ${MY_USER}
 
 RUN mkdir -p ${MY_HOME}/projects/mpn/ws00/src && \
     cd ${MY_HOME}/projects/mpn/ws00/src && \
     git clone --branch melodic https://github.com/tuw-robotics/grid_map.git  && \
-    git clone --branch master https://github.com/tuw-robotics/tuw_msgs.git  
+    git clone --branch master https://github.com/tuw-robotics/tuw_msgs.git   && \
+    git clone --branch master https://github.com/tuw-robotics/stage_ros.git  
     
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${MY_HOME}/projects/mpn/ws00; catkin_make'
 
@@ -51,12 +53,22 @@ RUN mkdir -p ${MY_HOME}/projects/mpn/ws01/src && \
     git clone --branch master https://github.com/tuw-robotics/tuw_rviz.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_agv.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_control.git && \
-    git clone --branch master https://github.com/tuw-robotics/tuw_geometry.git && \
+    git clone --branch melodic https://github.com/tuw-robotics/tuw_geometry.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_teleop.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_collision_alarm.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_global_planner.git 
     
 RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make'
+
+RUN mkdir -p ${MY_HOME}/projects/mpn/ws02/src && \
+    cd ${MY_HOME}/projects/mpn/ws02/src && \
+    git clone --branch melodic https://github.com/tuw-robotics/tuw_multi_robot.git
+    
+# RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws01/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws02; catkin_make'
+
+RUN cd ${MY_HOME}/projects/mpn && \
+    find  -path '*/.git/config'  -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} \;
+
 
 # clean apt
 USER root
