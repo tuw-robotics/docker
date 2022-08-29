@@ -45,8 +45,8 @@ RUN mkdir -p ${MY_HOME}/projects/mpn/ws00/src && \
     git clone --branch master https://github.com/tuw-robotics/tuw_msgs.git   && \
     git clone --branch master https://github.com/tuw-robotics/stage_ros.git  
     
-RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${MY_HOME}/projects/mpn/ws00; catkin_make'
-
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${MY_HOME}/projects/mpn/ws00; catkin_make' && \
+    echo 'source ${MY_HOME}/projects/mpn/ws00/devel/setup.bash' >> ~/.bashrc
 
 RUN mkdir -p ${MY_HOME}/projects/mpn/ws01/src && \
     cd ${MY_HOME}/projects/mpn/ws01/src && \
@@ -58,14 +58,23 @@ RUN mkdir -p ${MY_HOME}/projects/mpn/ws01/src && \
     git clone --branch master https://github.com/tuw-robotics/tuw_collision_alarm.git && \
     git clone --branch master https://github.com/tuw-robotics/tuw_global_planner.git 
     
-RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make'
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make' && \
+    echo 'source ${MY_HOME}/projects/mpn/ws01/devel/setup.bash' >> ~/.bashrc
 
 RUN mkdir -p ${MY_HOME}/projects/mpn/ws02/src && \
     cd ${MY_HOME}/projects/mpn/ws02/src && \
     git clone --branch melodic https://github.com/tuw-robotics/tuw_multi_robot.git
     
-# RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws01/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws02; catkin_make'
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws01/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws02; catkin_make' && \
+    echo 'source ${MY_HOME}/projects/mpn/ws02/devel/setup.bash' >> ~/.bashrc
 
+RUN echo "tmux new -s mrrp \; split-window -v \; split-window -v \; select-pane -t 0 \; attach" >> ~/.bash_history
+RUN echo "roslaunch tuw_multi_robot_demo demo.launch room:=warehouse032  nr_of_robots:=14" >> ~/.bash_history
+RUN echo "rosrun tuw_multi_robot_goal_generator goals_random _nr_of_robots:=32 _distance_boundary:=0.6 _distance_to_map_border:=0.2 _nr_of_avaliable_robots:=14" >> ~/.bash_history
+
+
+
+# change https to ssh checkouts 
 RUN cd ${MY_HOME}/projects/mpn && \
     find  -path '*/.git/config'  -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} \;
 
