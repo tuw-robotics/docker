@@ -19,10 +19,10 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u $(USER)
 	
 build:
-	@docker build -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/focal/core/.
-	@docker build -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
-	@docker build -t $(OWNER)/$(ROS_DISTRO)-bridge           --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
-	@docker build -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
+	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/focal/core/.
+	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
+	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-bridge           --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
+	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core
