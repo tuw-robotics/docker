@@ -24,9 +24,8 @@ exec /usr/bin/startxfce4
 OS=`uname -s`" >> ${MY_HOME}/.vnc/xstartup.turbovnc
 chmod +x ${MY_HOME}/.vnc/xstartup.turbovnc
 chown -R ${MY_USER}:${MY_USER} ${MY_HOME}/.vnc
-
-# Remove keyboard shortcut to allow bash_completion in xfce4-terminal
-echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
+touch ${MY_HOME}/.Xauthority
+chown -R ${MY_USER}:${MY_USER} ${MY_HOME}/.Xauthority
 
 echo "/opt/TurboVNC/bin/vncserver -kill :1" >> ${MY_HOME}/.bash_history
 echo "/opt/TurboVNC/bin/vncserver -localhost -securitytypes NONE :1" >> ${MY_HOME}/.bash_history

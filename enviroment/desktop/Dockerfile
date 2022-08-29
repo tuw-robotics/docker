@@ -9,11 +9,13 @@ FROM $BASE_CONTAINER
 USER root
 
 RUN apt-get update 
-RUN apt-get install -y --no-install-recommends xubuntu-desktop geany wget dbus-x11
-RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y --no-install-recommends xubuntu-desktop
+RUN apt-get remove -y update-manager
+RUN apt-get install -y geany meld wget dbus-x11
+RUN apt-get autoclean -y && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 # Remove keyboard shortcut to allow bash_completion in xfce4-terminal
-RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
+# RUN echo "DISPLAY=:1 xfconf-query -c xfce4-keyboard-shortcuts -p \"/xfwm4/custom/<Super>Tab\" -r" >> ${MY_HOME}/.bashrc
 
 ENV SCRIPTS_DIR=./scripts
 ENV INSTALL_DIR=/install
