@@ -1,5 +1,5 @@
-ROS_DISTRO = noetic
-OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
+ROS_DISTRO = melodic
+OWNER = registry.auto.tuwien.ac.at/roblab/docker/bionic
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 
 RUN = enviroment-desktop
@@ -11,10 +11,10 @@ help:
 	@echo "-- Help Menu for ROS ${ROS_DISTRO} based on $$\$${ROOT_CONTAINER}"
 	@echo ""
 	@echo "   global options with defaults:"
-	@echo "     ROS_DISTRO=noetic"
-	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal"
-	@echo "     ROOT_CONTAINER=$$\$${OWNER}/noetic-desktop"
-	@echo "     RUN=enviroment-core"
+	@echo "     ROS_DISTRO=melodic"
+	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic"
+	@echo "     ROOT_CONTAINER=$$\$${OWNER}/melodic-desktop"
+	@echo "     RUN=enviroment-desktop"
 	@echo ""
 	@echo "   make build              - build all images"
 	@echo "   make login USER=mbader  - authenticate container Registry"
@@ -31,7 +31,7 @@ login:
 build:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
-	#@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
