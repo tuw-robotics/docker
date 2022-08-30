@@ -37,6 +37,11 @@ To delete all images:
 ```bash
 docker image rm -f $(docker images -a -q)
 ```
+To deleate images with <none> TAG
+
+```
+docker rmi $(docker images -f "dangling=true" -q)
+```
 
 ### Delete container
 
