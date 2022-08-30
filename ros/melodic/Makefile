@@ -19,12 +19,12 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u $(USER)
 	
 build:
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/bionic/core/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/bionic/base/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-robot            --build-arg OWNER=$(OWNER)                     ubuntu/bionic/robot/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-perception       --build-arg OWNER=$(OWNER)                     ubuntu/bionic/perception/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/bionic/desktop/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-desktop-full     --build-arg OWNER=$(OWNER)                     ubuntu/bionic/desktop-full/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/bionic/core/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/bionic/base/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-robot            --build-arg OWNER=$(OWNER)                     ubuntu/bionic/robot/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-perception       --build-arg OWNER=$(OWNER)                     ubuntu/bionic/perception/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/bionic/desktop/.
+	@docker build --rm  --squash -t $(OWNER)/$(ROS_DISTRO)-desktop-full     --build-arg OWNER=$(OWNER)                     ubuntu/bionic/desktop-full/.
 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core

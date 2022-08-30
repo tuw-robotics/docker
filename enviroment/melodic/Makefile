@@ -29,9 +29,9 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	@docker build --squash --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	@docker build --squash --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+	@docker build --squash --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -40,12 +40,12 @@ push:
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 run:
