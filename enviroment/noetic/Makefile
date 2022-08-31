@@ -40,12 +40,12 @@ push:
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-base
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
 run:
