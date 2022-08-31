@@ -5,6 +5,5 @@
 # setup ros environment
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "${PRJ_DIR}/devel/setup.bash"
-roslaunch tuw_p3dx aria_twist.launch &
-roslaunch tuw_p3dx laser_hokuyo.launch
+roslaunch tuw_p3dx aria_twist.launch
 
