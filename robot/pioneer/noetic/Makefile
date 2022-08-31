@@ -3,6 +3,7 @@ OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
 
 RUN = p3dx-core
+SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 
 all: help
 
@@ -29,7 +30,7 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
 	
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -42,5 +43,5 @@ clean:
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 	
