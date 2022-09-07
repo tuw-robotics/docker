@@ -28,11 +28,8 @@ RUN git clone --branch master  git@github.com:tuw-robotics/tuw_teleop.git       
 RUN git clone --branch master  git@github.com:tuw-robotics/tuw_collision_alarm.git  mpn/ws01/src/tuw_collision_alarm
 RUN git clone --branch master  git@github.com:tuw-robotics/tuw_global_planner.git   mpn/ws01/src/tuw_global_planner    
 RUN git clone --branch master  git@github.com:tuw-robotics/tuw_multi_robot.git      mpn/ws02/src/tuw_multi_robot    
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_diffdrive.git        mpn/ws03/src/tuw_diffdrive
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_mpn.git              mpn/ws03/src/tuw_mpn
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_nav_costmap.git      mpn/ws03/src/tuw_nav_costmap
 RUN git clone --branch master  git@github.com:tuw-robotics/tuw_launches.git         mpn/tuw/src/tuw_launches
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_gazebo.git           mpn/tuw/src/tuw_gazebo
+# RUN git clone --branch master  git@github.com:tuw-robotics/tuw_gazebo.git         mpn/tuw/src/tuw_gazebo
 
 FROM $ROOT_CONTAINER
 
@@ -106,10 +103,16 @@ COPY --chown=${MY_USER}:${MY_USER} --from=intermediate /mpn ${MY_HOME}/projects/
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;             cd ${MY_HOME}/projects/mpn/ws00; catkin_make'
 RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make'
 RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws01/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws02; catkin_make'
-RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws02/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws03; catkin_make -Doptizelle_ROOT_DIR=/opt/Optizelle -DFMM_DIR=/opt/fastmarching/share/FMM'
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws02/devel/setup.bash; cd ${MY_HOME}/projects/mpn/tuw; catkin_make'
 
 RUN echo 'source ${MY_HOME}/projects/mpn/tuw/devel/setup.bash' >> ~/.bashrc
+
+RUN echo 'roslaunch tuw_launches mpn_nodelet.launch cfg:=p3dx' >> ~/.bash_history && \
+    echo 'roslaunch tuw_launches navigation.launch launch_safety_constraints:=false use_localization:=true debug:=true room:=roblab launch_mpn:=false' >> ~/.bash_history  && \        
+    echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history && \
+    echo 'tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
     
+                       
 USER root
 RUN rm -rf /var/lib/apt/lists/*
 

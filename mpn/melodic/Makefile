@@ -2,7 +2,7 @@ ROS_DISTRO = melodic
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/bionic
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 
-RUN = mpn
+RUN = mpc
 SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 
 all: help
@@ -31,18 +31,22 @@ login:
 	
     
 build: 
-	@docker build  --rm -t ${OWNER}/${ROS_DISTRO}-mpn                --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-desktop   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
+	@docker build  --rm -t ${OWNER}/${ROS_DISTRO}-pathfollowing                --build-arg ROOT_CONTAINER=${OWNER}/${ROS_DISTRO}-enviroment-desktop   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" pathfollowing/.
+	@docker build  --rm -t ${OWNER}/${ROS_DISTRO}-mpc                          --build-arg OWNER=$(OWNER)                                             --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" mpc/.
 
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}-mpn
+	@docker push ${OWNER}/${ROS_DISTRO}-pathfollowing
+	@docker push ${OWNER}/${ROS_DISTRO}-mpc
 	
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}-mpn
+	@docker pull ${OWNER}/${ROS_DISTRO}-pathfollowing
+	@docker pull ${OWNER}/${ROS_DISTRO}-mpc
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-mpn
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-pathfollowing
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-mpc
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" -v ~/.ssh:/home/robot/.ssh:ro --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" -v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
