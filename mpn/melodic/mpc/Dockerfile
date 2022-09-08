@@ -1,25 +1,5 @@
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/bionic/melodic
-ARG ROOT_CONTAINER=$OWNER/${ROS_DISTRO}-pathfollowing
-
-FROM ubuntu as intermediate
-
-# install git
-RUN apt-get update
-RUN apt-get install -y git
-
-# add credentials on build
-ARG SSH_PRIVATE_KEY
-RUN mkdir /root/.ssh/
-RUN echo "${SSH_PRIVATE_KEY}" > /root/.ssh/id_rsa
-RUN chmod 600 /root/.ssh/id_rsa
-
-# Add git providers to known_hosts
-RUN touch /root/.ssh/known_hosts
-RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
-   
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_diffdrive.git        mpn/ws03/src/tuw_diffdrive
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_mpn.git              mpn/ws03/src/tuw_mpn
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_nav_costmap.git      mpn/ws03/src/tuw_nav_costmap
+ARG ROOT_CONTAINER=$OWNER/noetic-desktop
 
 FROM $ROOT_CONTAINER
 
@@ -88,18 +68,40 @@ RUN apt install -y libjsoncpp-dev libblas-dev liblapack-dev gfortran && \
 # COPY --chown=${MY_USER}:${MY_USER} ./git/ ${MY_HOME}/projects/mpn/
 USER ${MY_USER}
 
-COPY --chown=${MY_USER}:${MY_USER} --from=intermediate /mpn ${MY_HOME}/projects/mpn
+## ws00
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_HOME}/projects/mpn/ws00
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;             cd ${MY_HOME}/projects/mpn/ws00; catkin_make -DCMAKE_BUILD_TYPE=Release'
+
+## ws01
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws01 ${MY_HOME}/projects/mpn/ws01
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws00/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws01; catkin_make -DCMAKE_BUILD_TYPE=Release'
+
+## ws02
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws02 ${MY_HOME}/projects/mpn/ws02
+RUN rm ${MY_HOME}/projects/mpn/ws02/src/tuw_rviz/tuw_control_rviz/CATKIN_IGNORE
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws01/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws02; catkin_make -DCMAKE_BUILD_TYPE=Release'
+
+## ws03
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws03 ${MY_HOME}/projects/mpn/ws03
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws02/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws03; catkin_make -DCMAKE_BUILD_TYPE=Release -Doptizelle_ROOT_DIR=/opt/Optizelle -DFMM_DIR=/opt/fastmarching/share/FMM'
+
+## tuw
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/tuw  ${MY_HOME}/projects/mpn/tuw
+RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws03/devel/setup.bash; cd ${MY_HOME}/projects/mpn/tuw; catkin_make -DCMAKE_BUILD_TYPE=Release'
+
+RUN echo 'source ${MY_HOME}/projects/mpn/tuw/devel/setup.bash' >> ~/.bashrc
+
+RUN echo 'roslaunch tuw_launches mpn_nodelet.launch cfg:=p3dx' >> ~/.bash_history && \
+    echo 'roslaunch tuw_launches rviz_navigation.launch' >> ~/.bash_history  && \        
+    echo 'roslaunch tuw_launches navigation.launch launch_safety_constraints:=false use_localization:=true debug:=true room:=roblab launch_mpn:=false' >> ~/.bash_history  && \        
+    echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history && \
+    echo 'tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
     
-RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws02/devel/setup.bash; cd ${MY_HOME}/projects/mpn/ws03; catkin_make -Doptizelle_ROOT_DIR=/opt/Optizelle -DFMM_DIR=/opt/fastmarching/share/FMM'
-
-RUN /bin/bash -c '. ${MY_HOME}/projects/mpn/ws03/devel/setup.bash; cd ${MY_HOME}/projects/mpn/tuw; catkin_make'
-
-
                        
 USER root
 RUN rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
-WORKDIR ${MY_HOME}
+WORKDIR ${MY_HOME}/projects/mpn/tuw
 ENV HOME ${MY_HOME}
 CMD /bin/bash
