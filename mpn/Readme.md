@@ -23,10 +23,14 @@ Followed by
 
 ```roslaunch tuw_launches pathfollowing.launch```
 
-[![Pathfollowing with tuw_control](res/pathfollowing_roblab_rviz_gazebo_youtube.png)](https://www.youtube.com/watch?v=sZgbYQEULLo)
+| Video precenting a setup with gazebo |
+|:----:|
+| [![Pathfollowing with tuw_control](res/pathfollowing_roblab_rviz_gazebo_youtube.png)](https://www.youtube.com/watch?v=sZgbYQEULLo) |
 
-<img src="res/pathfollowing_roblab_rviz_gazebo.png" alt="pioneer robot in following a path" width="600px" /> 
 
+| Robot following a spline |
+|:----:|
+| <img src="res/pathfollowing_roblab_rviz_gazebo.png" alt="pioneer robot in following a path" width="600px" /> |
 
 ## MPC
 
