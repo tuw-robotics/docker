@@ -3,3 +3,6 @@
 
 # Jetbrains IDEs
 /.idea
+
+# Draw IO
+*.bkp
