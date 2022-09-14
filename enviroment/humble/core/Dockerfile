@@ -40,6 +40,10 @@ RUN chmod -R a+x ${INSTALL_DIR}
 RUN $INSTALL_DIR/setup/add_user.sh
 # make the user owner of the home directory
 
+# copy bashrc
+COPY ${CONFIG_DIR}/bash/bashrc ${MY_HOME}/.bashrc
+# copy env
+COPY ${CONFIG_DIR}/bash/env.sh ${MY_HOME}/projects/env.sh
 # copy bash history
 COPY ${CONFIG_DIR}/bash/bash_history ${MY_HOME}/.bash_history
 # copy keyboard config
@@ -67,10 +71,6 @@ RUN apt-get install -y     \
       
 RUN apt-get install -y openssh-server
 RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
-
-USER ${MY_USER}
-
-RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
 
 # clean apt
 USER root
