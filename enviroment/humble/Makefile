@@ -67,6 +67,7 @@ run-ide:
 run-gz:
 	mkdir -p /tmp/docker-gazebo/runtime-robot /tmp/docker-gazebo/gazebo /tmp/docker-gazebo/ignition /tmp/docker-gazebo/sdformat
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
+		-v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v /tmp/docker-gazebo/runtime-robot:/tmp/runtime-robot \
 		-v /tmp/docker-gazebo/gazebo:/home/robot/.gazebo \

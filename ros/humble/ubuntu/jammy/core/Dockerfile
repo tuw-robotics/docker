@@ -5,6 +5,9 @@
 ARG ROOT_CONTAINER=ubuntu:jammy
 FROM $ROOT_CONTAINER
 
+ENV UBUNTU_DISTRO=jammy
+ENV ROS_DISTRO=humble
+
 # setup timezone
 RUN echo 'Etc/UTC' > /etc/timezone && \
     ln -s /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
@@ -28,11 +31,10 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-ENV ROS_DISTRO humble
 
 # install ros2 packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-humble-ros-core=0.10.0-1* \
+    ros-$ROS_DISTRO-ros-core=0.10.0-1* \
     && rm -rf /var/lib/apt/lists/*
 
 # setup entrypoint

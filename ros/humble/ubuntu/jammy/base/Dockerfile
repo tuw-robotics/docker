@@ -2,8 +2,10 @@
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # based on the https://github.com/osrf/docker_images
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG BASE_CONTAINER=$OWNER/humble-core
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO
+ARG BASE_CONTAINER=$OWNER/$ROS_DISTRO-core
 FROM $BASE_CONTAINER
 
 
@@ -31,6 +33,13 @@ RUN colcon mixin add default \
 
 # install ros2 packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ros-humble-ros-base=0.10.0-1* \
+    ros-$ROS_DISTRO-ros-base=0.10.0-1* 
+    
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-nav2-core \
+    ros-$ROS_DISTRO-nav2-amcl \
+    ros-$ROS_DISTRO-nav2-map-server \
+    ros-$ROS_DISTRO-nav2-lifecycle-manager \
+    ros-$ROS_DISTRO-nav2-costmap-2d \
     && rm -rf /var/lib/apt/lists/*
 

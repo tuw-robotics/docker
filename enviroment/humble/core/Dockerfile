@@ -2,8 +2,10 @@
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG ROOT_CONTAINER=$OWNER/noetic-desktop
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO
+ARG ROOT_CONTAINER=$OWNER/$ROS_DISTRO-desktop
 FROM $ROOT_CONTAINER
 
 # Replace 1000 with your user / group id

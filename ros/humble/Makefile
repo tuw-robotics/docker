@@ -19,9 +19,9 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u $(USER)
 	
 build:
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/jammy/core/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/jammy/base/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/jammy/desktop/.
+	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/jammy/core/.
+	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/jammy/base/.
+	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/jammy/desktop/.
 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core

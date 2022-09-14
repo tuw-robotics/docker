@@ -1,7 +1,9 @@
 # enviroment desktop
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
 ARG BASE_CONTAINER=$OWNER-enviroment-core
 FROM $BASE_CONTAINER
 
@@ -22,19 +24,19 @@ RUN apt-get -y dist-upgrade
 
 RUN apt-get install -y --no-install-recommends \
     gazebo \
-    ros-humble-camera-info-manager \
-    ros-humble-gazebo-ros2-control \
-    ros-humble-gazebo-ros  \
-    ros-humble-ament-cmake \
-    ros-humble-xacro \
-    ros-humble-joint-state-publisher \
-    ros-humble-teleop-tools \
-    ros-humble-tf2-tools \
-    ros-humble-tf-transformations
+    ros-$ROS_DISTRO-camera-info-manager \
+    ros-$ROS_DISTRO-gazebo-ros2-control \
+    ros-$ROS_DISTRO-gazebo-ros  \
+    ros-$ROS_DISTRO-ament-cmake \
+    ros-$ROS_DISTRO-xacro \
+    ros-$ROS_DISTRO-joint-state-publisher \
+    ros-$ROS_DISTRO-teleop-tools \
+    ros-$ROS_DISTRO-tf2-tools \
+    ros-$ROS_DISTRO-tf-transformations
     
     
 RUN apt-get install -y --no-install-recommends \
-    ros-humble-tf-transformations
+    ros-$ROS_DISTRO-tf-transformations
     
 RUN pip3 install transforms3d 
 RUN rm -rf /var/lib/apt/lists/*

@@ -2,7 +2,9 @@
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
 ARG BASE_CONTAINER=$OWNER-enviroment-desktop
 FROM $BASE_CONTAINER
 
@@ -12,6 +14,7 @@ ENV INSTALL_DIR=/install
 USER root
 
 RUN apt-get update 
+RUN apt-get -y install ros-$ROS_DISTRO-nav2*
 
 # copy scripts to container
 COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
@@ -29,6 +32,13 @@ USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
-WORKDIR ${MY_HOME}
+
+ENV MY_PRJ=${MY_HOME}/projects/ros2/
+
+RUN echo 'rm -rf build install log' >> ~/.bash_history && \     
+    echo 'colcon build --symlink-install' >> ~/.bash_history && \      
+    echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
+
+WORKDIR ${MY_PRJ}
 ENV HOME=${MY_HOME}
 CMD /bin/bash

@@ -2,7 +2,9 @@
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 # created by Eugenn Kaltenegger <eugen.kaltenegger@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
 ARG BASE_CONTAINER=$OWNER-enviroment-core
 FROM $BASE_CONTAINER
 
