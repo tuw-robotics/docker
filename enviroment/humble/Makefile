@@ -8,22 +8,28 @@ all: help
 
 help:
 	@echo ""
-	@echo "-- Help Menu for ROS ${ROS_DISTRO} based on $$\$${ROOT_CONTAINER}"
+	@echo "   Help Menu for ROS ${ROS_DISTRO} based on:"
+	@echo "   ${ROOT_CONTAINER}"
 	@echo ""
 	@echo "   global options with defaults:"
-	@echo "     ROS_DISTRO=humble"
-	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/jammy"
-	@echo "     ROOT_CONTAINER=$$\$${OWNER}/humble-desktop"
-	@echo "     RUN=enviroment-core"
+	@echo "    - ROS_DISTRO     = humble"
+	@echo "    - OWNER          = registry.auto.tuwien.ac.at/roblab/docker/jammy"
+	@echo "    - ROOT_CONTAINER = \044{OWNER}/\044{ROS_DISTRO}-desktop"
+	@echo "    - RUN            = ${RUN}"
 	@echo ""
 	@echo "   make build              - build all images"
 	@echo "   make login USER=mbader  - authenticate container Registry"
 	@echo "   make pull               - pull all images"
 	@echo "   make push               - push all images"
 	@echo "   make clean              - remove all images"
-	@echo "   make run                - runs the image: $$\$${OWNER}/$$\$${ROS_DISTRO}/$$\$${RUN}"
-	
+	@echo "   make run                - runs the image: \044{OWNER}/\044{ROS_DISTRO}/\044{RUN}"
+	@echo "   make run-gz             - runs the image: ${OWNER}/${ROS_DISTRO}-enviroment-gazebo"
+	@echo "   make run-ide            - runs the image: ${OWNER}/${ROS_DISTRO}-enviroment-ide and mounts ${HOME}/projects"
+	@echo "   make repo-checkout      - clones repositories needed for builds"
+	@echo "   make repo-update        - updates repositories needed for builds"
 	@echo ""
+	@echo "  Example:"
+	@echo "   make run RUN=enviroment-ide"
 
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
