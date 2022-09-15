@@ -32,6 +32,7 @@ help:
 	@echo ""
 	@echo "  Example:"
 	@echo "   make run RUN=enviroment-ide PRJ_DIR=${HOME}/Projects"
+	@echo "   make run-ide PRJ_DIR=${HOME}/Projects"
 
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
@@ -68,12 +69,13 @@ run-ide:
 	mkdir -p /tmp/docker-ide/vscode
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
-		-v /tmp/docker-ide/runtime-robot:/home/robot/.vscode \
+		-v /tmp/docker-ide/vscode:/home/robot/.vscode \
 		-v ${PRJ_DIR}:/home/robot/projects \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide
 	
 run-gz:
-	mkdir -p /tmp/docker-gazebo/runtime-robot /tmp/docker-gazebo/gazebo /tmp/docker-gazebo/ignition /tmp/docker-gazebo/sdformat
+	@mkdir -p /tmp/docker-gazebo/runtime-robot /tmp/docker-gazebo/gazebo /tmp/docker-gazebo/ignition /tmp/docker-gazebo/sdformat
+	@chmod 0700 -R /tmp/docker-gazebo/runtime-robot
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
 		-v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \

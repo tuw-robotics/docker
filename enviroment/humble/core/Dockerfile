@@ -69,7 +69,8 @@ RUN apt-get install -y     \
       rsync            \
       tmux             \
       vim              \
-      wget
+      wget             \
+      iputils-ping
       
 RUN apt-get install -y openssh-server
 RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
