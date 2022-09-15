@@ -31,7 +31,7 @@ help:
 	@echo "   make repo-update        - updates repositories needed for builds"
 	@echo ""
 	@echo "  Example:"
-	@echo "   make run RUN=enviroment-ide"
+	@echo "   make run RUN=enviroment-ide PRJ_DIR=${HOME}/Projects"
 
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
