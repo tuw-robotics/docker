@@ -1,6 +1,7 @@
 ROS_DISTRO = humble
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/jammy
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
+PRJ_DIR = ${HOME}/projects
 
 RUN = enviroment-desktop
 
@@ -16,6 +17,7 @@ help:
 	@echo "    - OWNER          = registry.auto.tuwien.ac.at/roblab/docker/jammy"
 	@echo "    - ROOT_CONTAINER = \044{OWNER}/\044{ROS_DISTRO}-desktop"
 	@echo "    - RUN            = ${RUN}"
+	@echo "    - PRJ_DIR        = ${PRJ_DIR}"
 	@echo ""
 	@echo "   make build              - build all images"
 	@echo "   make login USER=mbader  - authenticate container Registry"
@@ -24,7 +26,7 @@ help:
 	@echo "   make clean              - remove all images"
 	@echo "   make run                - runs the image: \044{OWNER}/\044{ROS_DISTRO}/\044{RUN}"
 	@echo "   make run-gz             - runs the image: ${OWNER}/${ROS_DISTRO}-enviroment-gazebo"
-	@echo "   make run-ide            - runs the image: ${OWNER}/${ROS_DISTRO}-enviroment-ide and mounts ${HOME}/projects"
+	@echo "   make run-ide            - runs the image: ${OWNER}/${ROS_DISTRO}-enviroment-ide and mounts \044{${PRJ_DIR} to ~/projects"
 	@echo "   make repo-checkout      - clones repositories needed for builds"
 	@echo "   make repo-update        - updates repositories needed for builds"
 	@echo ""
@@ -67,7 +69,7 @@ run-ide:
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v /tmp/docker-ide/runtime-robot:/home/robot/.vscode \
-		-v ~/projects:/home/robot/projects \
+		-v ${PRJ_DIR}:/home/robot/projects \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide
 	
 run-gz:
