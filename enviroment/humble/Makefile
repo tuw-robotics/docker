@@ -5,6 +5,9 @@ PRJ_DIR = ${HOME}/projects
 
 RUN = enviroment-desktop
 
+PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
+PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	
 all: help
 
 help:
@@ -65,24 +68,41 @@ run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
-run-ide:
-	mkdir -p /tmp/docker-ide/vscode
+# creates a folder for the contaners persistend data therefore it copies of an emty container home directory 
+# ToDo: this can be fused with the target ${PERSISTENT_GZ}:
+${PERSISTENT_IDE}:
+	@echo create PERSISTENT_IDE folder: ${PERSISTENT_IDE}
+	@mkdir -p ${PERSISTENT_IDE}/home
+	@echo "Run the following command in your container"
+	@echo " rsync -av /home/robot /tmp/home; exit"
+	@docker run --rm -ti -v ${PERSISTENT_IDE}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide
+
+# runs the ide container and mounts a persistent folder as home 
+run-ide: ${PERSISTENT_IDE}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \
+		-v ${PERSISTENT_IDE}/home:/home \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
-		-v /tmp/docker-ide/vscode:/home/robot/.vscode \
 		-v ${PRJ_DIR}:/home/robot/projects \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide
 	
-run-gz:
-	@mkdir -p /tmp/docker-gazebo/runtime-robot /tmp/docker-gazebo/gazebo /tmp/docker-gazebo/ignition /tmp/docker-gazebo/sdformat
-	@chmod 0700 -R /tmp/docker-gazebo/runtime-robot
+# creates a folder for the contaners persistend data therefore it copies of an emty container home directory 
+# ToDo: this can be fused with the target ${PERSISTENT_IDE}:
+${PERSISTENT_GZ}:
+	@echo create PERSISTENT_GZ folder: ${PERSISTENT_GZ}
+	@mkdir -p ${PERSISTENT_GZ}/home \
+	          ${PERSISTENT_GZ}/runtime-robot
+	@chmod 0700 -R ${PERSISTENT_GZ}/runtime-robot
+	@echo "Run the following command in your container"
+	@echo " rsync -av /home/robot /tmp/home; exit"
+	@docker run --rm -ti -v ${PERSISTENT_GZ}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	
+# runs the ide container and mounts a persistent folder as home 
+run-gz: ${PERSISTENT_GZ}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
-		-v ~/.gitconfig:/home/robot/.gitconfig:ro \
-		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
-		-v /tmp/docker-gazebo/runtime-robot:/tmp/runtime-robot \
-		-v /tmp/docker-gazebo/gazebo:/home/robot/.gazebo \
-		-v /tmp/docker-gazebo/ignition:/home/robot/.ignition \
-		-v /tmp/docker-gazebo/sdformat:/home/robot/.sdformat \
+		-v ${PERSISTENT_IDE}/home:/home \
+		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
+		-v ${HOME}/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
+		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
 repo-checkout:
