@@ -107,7 +107,7 @@ run-gz: ${PERSISTENT_GZ}
 
 repo-checkout:
 	git clone --branch ros2      git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
-	git clone --branch galactic  git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
+	git clone --branch ros2      git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
 
 
 repo-update:
