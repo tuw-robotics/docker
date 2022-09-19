@@ -99,7 +99,7 @@ ${PERSISTENT_GZ}:
 # runs the ide container and mounts a persistent folder as home 
 run-gz: ${PERSISTENT_GZ}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
-		-v ${PERSISTENT_IDE}/home:/home \
+		-v ${PERSISTENT_GZ}/home:/home \
 		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${HOME}/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
