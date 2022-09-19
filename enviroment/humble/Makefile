@@ -94,7 +94,7 @@ ${PERSISTENT_GZ}:
 	@chmod 0700 -R ${PERSISTENT_GZ}/runtime-robot
 	@echo "Run the following command in your container"
 	@echo " rsync -av /home/robot /tmp/home; exit"
-	@docker run --rm -ti -v ${PERSISTENT_GZ}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker run --rm -ti -v ${PERSISTENT_GZ}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
 # runs the ide container and mounts a persistent folder as home 
 run-gz: ${PERSISTENT_GZ}
