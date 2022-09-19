@@ -41,5 +41,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-nav2-map-server \
     ros-$ROS_DISTRO-nav2-lifecycle-manager \
     ros-$ROS_DISTRO-nav2-costmap-2d \
+    ros-$ROS_DISTRO-test-msgs \
     && rm -rf /var/lib/apt/lists/*
 

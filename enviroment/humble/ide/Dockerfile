@@ -14,7 +14,6 @@ ENV INSTALL_DIR=/install
 USER root
 
 RUN apt-get update 
-RUN apt-get -y install ros-$ROS_DISTRO-nav2*
 
 # copy scripts to container
 COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
