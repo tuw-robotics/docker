@@ -60,6 +60,6 @@ RUN echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0
     echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 USER ${MY_USER}
-WORKDIR ${MY_PRJ}
+WORKDIR ${MY_HOME}
 ENV HOME=${MY_HOME}
 CMD /bin/bash

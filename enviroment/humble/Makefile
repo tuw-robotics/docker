@@ -83,6 +83,7 @@ run-ide: ${PERSISTENT_IDE}
 		-v ${PERSISTENT_IDE}/home:/home \
 		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${PRJ_DIR}:/home/robot/projects \
+		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide
 	
 # creates a folder for the contaners persistend data therefore it copies of an emty container home directory 
@@ -103,6 +104,7 @@ run-gz: ${PERSISTENT_GZ}
 		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${HOME}/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
+		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
 repo-checkout:
