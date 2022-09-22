@@ -81,7 +81,8 @@ ${PERSISTENT_IDE}:
 run-ide: ${PERSISTENT_IDE}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \
 		-v ${PERSISTENT_IDE}/home:/home \
-		-v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
+		-v ~/.ssh:/home/robot/.ssh:ro \
+		-v ~/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${PRJ_DIR}:/home/robot/projects \
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide
@@ -97,16 +98,26 @@ ${PERSISTENT_GZ}:
 	@echo " rsync -av /home/robot /tmp/home; exit"
 	@docker run --rm -ti -v ${PERSISTENT_GZ}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
-# runs the ide container and mounts a persistent folder as home 
-run-gz: ${PERSISTENT_GZ}
+# runs the gazebo container and mounts a persistent folder as home 
+run-gz-dev: ${PERSISTENT_GZ}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
 		-v ${PERSISTENT_GZ}/home:/home \
 		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
-		-v ${HOME}/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro \
+		-v ${HOME}/.ssh:/home/robot/.ssh:ro \
 		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
+# runs the gazebo container
+run-gz: ${PERSISTENT_GZ}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
+		-v ${HOME}/.sdformat:/home/robot/.sdformat \
+		-v ${HOME}/.ignition:/home/robot/.ignition \
+		-v ${HOME}/.gazebo:/home/robot/.gazebo \
+		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
+		-v /dev/shm:/dev/shm \
+	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	
 repo-checkout:
 	git clone --branch ros2      git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
 	git clone --branch ros2      git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo

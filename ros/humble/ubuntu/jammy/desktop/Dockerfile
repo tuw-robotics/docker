@@ -12,7 +12,8 @@ FROM $BASE_CONTAINER
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-desktop=0.10.0-1* \
     ros-$ROS_DISTRO-nav2* \
-    ros-$ROS_DISTRO-slam-toolbox 
+    ros-$ROS_DISTRO-slam-toolbox  \
+    ros-$ROS_DISTRO-laser-filters 
     
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-nav2-common \

@@ -43,7 +43,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
 
-ENV MY_PRJ=${MY_HOME}/projects/gz/
+ENV MY_PRJ=${MY_HOME}/projects/ros2/gazebo/
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; colcon build --symlink-install'
@@ -55,11 +55,12 @@ RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws01; colco
 
 COPY --chown=${MY_USER}:${MY_USER} ./env.sh ${MY_PRJ}/env.sh
 
-RUN echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0 robot:=pioneer3dx  X:=-6.0 Y:=-6.0 Theta:=0.7' >> ~/.bash_history  && \   
+RUN echo "ros2 service call /reset_simulation 'std_srvs/srv/Empty'" >> ~/.bash_history  && \   
+    echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0 robot:=pioneer3dx  X:=-6.0 Y:=-6.0 Theta:=0.7' >> ~/.bash_history  && \   
     echo 'ros2 launch tuw_gazebo world.launch.py room:=cave' >> ~/.bash_history && \     
     echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 USER ${MY_USER}
-WORKDIR ${MY_HOME}
+WORKDIR ${MY_PRJ}
 ENV HOME=${MY_HOME}
 CMD /bin/bash
