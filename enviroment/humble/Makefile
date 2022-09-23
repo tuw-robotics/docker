@@ -40,6 +40,18 @@ help:
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
+build-core:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	
+build-ide:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	
+build-desktop:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+
+build-gazebo:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       gazebo/.
+	
 build:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
@@ -77,6 +89,11 @@ ${PERSISTENT_IDE}:
 	@echo " rsync -av /home/robot /tmp/home; exit"
 	@docker run --rm -ti -v ${PERSISTENT_IDE}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
+# runs the ide container and mounts a persistent folder as home 
+run-core: 
+	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-core:127.0.0.1" --hostname ${ROS_DISTRO}-core --name ${ROS_DISTRO}-core \
+	${OWNER}/${ROS_DISTRO}-enviroment-core
+	
 # runs the ide container and mounts a persistent folder as home 
 run-ide: ${PERSISTENT_IDE}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \

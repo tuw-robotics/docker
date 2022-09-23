@@ -80,6 +80,7 @@ USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
+ENV TERM xterm-256color
 WORKDIR ${MY_HOME}
 ENV HOME=${MY_HOME}
 CMD /bin/bash
