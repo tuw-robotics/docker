@@ -52,11 +52,10 @@ build-desktop:
 build-gazebo:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       gazebo/.
 	
-build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       gazebo/.
+build-nav2:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       nav2/.
+	
+build: build-core build-ide build-desktop build-gazebo
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -135,10 +134,19 @@ run-gz: ${PERSISTENT_GZ}
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
-repo-checkout:
-	git clone --branch ros2      git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
-	git clone --branch ros2      git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
+repo-rm:
+	rm -rf gazebo/tmp/ws*
+	rm -rf nav2/tmp/ws*
+	
+repo-clone:
+	git clone --branch ros2        git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
+	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
+	git clone --branch humble      git@github.com:ros-planning/navigation2.git            nav2/tmp/ws00/src/navigation2
+	git clone --branch ros2        git@github.com:SteveMacenski/slam_toolbox.git          nav2/tmp/ws00/src/slam_toolbox
+	git clone --branch foxy-devel  git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
+	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
 
 
 repo-update:
-	find ./mpc -name .git -exec git --git-dir={} pull \;
+	find ./gazebo/tmp -name .git -exec git --git-dir={} pull \;
+	find ./nav2/tmp -name .git -exec git --git-dir={} pull \;
