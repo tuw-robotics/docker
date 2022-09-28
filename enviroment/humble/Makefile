@@ -43,11 +43,11 @@ login:
 build-core:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
 	
-build-ide:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
-	
 build-desktop:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+	
+build-ide:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
 
 build-gazebo:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       gazebo/.
@@ -55,7 +55,7 @@ build-gazebo:
 build-nav2:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       nav2/.
 	
-build: build-core build-ide build-desktop build-gazebo
+build: build-core build-desktop build-ide build-gazebo
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -141,8 +141,8 @@ repo-rm:
 repo-clone:
 	git clone --branch ros2        git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
 	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
-	git clone --branch humble      git@github.com:ros-planning/navigation2.git            nav2/tmp/ws00/src/navigation2
-	git clone --branch ros2        git@github.com:SteveMacenski/slam_toolbox.git          nav2/tmp/ws00/src/slam_toolbox
+	git clone --branch humble      git@github.com:tuw-robotics/navigation2.git            nav2/tmp/ws00/src/navigation2
+	git clone --branch ros2        git@github.com:tuw-robotics/slam_toolbox.git          nav2/tmp/ws00/src/slam_toolbox
 	git clone --branch foxy-devel  git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
 	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
 
