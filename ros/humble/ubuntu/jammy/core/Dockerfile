@@ -35,6 +35,9 @@ ENV LC_ALL C.UTF-8
 # install ros2 packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-$ROS_DISTRO-ros-core=0.10.0-1* \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+    ros-$ROS_DISTRO-rmw-fastrtps-cpp \
+    ros-$ROS_DISTRO-rmw-gurumdds-cpp \
     && rm -rf /var/lib/apt/lists/*
 
 # setup entrypoint

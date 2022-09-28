@@ -4,6 +4,8 @@ ROS_DISTRO = humble
 
 all: help
 
+RUN = core
+
 help:
 	@echo ""
 	@echo "-- Help Menu for ROS $(ROS_DISTRO) based on $(ROOT_CONTAINER)"
@@ -18,10 +20,20 @@ help:
 login:
 	@docker login registry.auto.tuwien.ac.at -u $(USER)
 	
-build:
+build-core:
 	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/jammy/core/.
+	
+build-base:
 	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/jammy/base/.
+	
+build-desktop:
 	docker build --squash --rm -t  $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/jammy/desktop/.
+
+build: build-core build-base build-desktop
+
+
+run:
+	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-${RUN}:127.0.0.1" --name ${ROS_DISTRO}-${RUN} --hostname ${ROS_DISTRO}-${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core
