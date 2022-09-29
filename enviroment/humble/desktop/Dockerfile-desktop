@@ -5,7 +5,7 @@
 ARG UBUNTU_DISTRO=jammy
 ARG ROS_DISTRO=humble
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
-ARG BASE_CONTAINER=$OWNER-enviroment-core
+ARG BASE_CONTAINER=$OWNER-enviroment-base
 FROM $BASE_CONTAINER
 
 USER root

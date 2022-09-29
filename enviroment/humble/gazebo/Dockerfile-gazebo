@@ -4,7 +4,7 @@
 ARG UBUNTU_DISTRO=jammy
 ARG ROS_DISTRO=humble
 ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
-ARG BASE_CONTAINER=$OWNER-enviroment-core
+ARG BASE_CONTAINER=$OWNER-enviroment-base
 FROM $BASE_CONTAINER
 
 USER root
@@ -17,28 +17,15 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D2486D2DD8
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-latest.list && \
     wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 
-
-
 RUN apt-get update
 RUN apt-get -y dist-upgrade
 
 RUN apt-get install -y --no-install-recommends \
     gazebo \
-    ros-$ROS_DISTRO-camera-info-manager \
     ros-$ROS_DISTRO-gazebo-ros2-control \
-    ros-$ROS_DISTRO-gazebo-ros  \
-    ros-$ROS_DISTRO-ament-cmake \
-    ros-$ROS_DISTRO-xacro \
-    ros-$ROS_DISTRO-joint-state-publisher \
-    ros-$ROS_DISTRO-teleop-tools \
-    ros-$ROS_DISTRO-tf2-tools \
-    ros-$ROS_DISTRO-tf-transformations
+    ros-$ROS_DISTRO-gazebo-ros-pkgs    \
+    ros-$ROS_DISTRO-gazebo-ros  
     
-    
-RUN apt-get install -y --no-install-recommends \
-    ros-$ROS_DISTRO-tf-transformations
-    
-RUN pip3 install transforms3d 
 RUN rm -rf /var/lib/apt/lists/*
 
 USER ${MY_USER}
@@ -46,6 +33,7 @@ USER ${MY_USER}
 ENV MY_PRJ=${MY_HOME}/projects/ros2/gazebo/
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
+RUN touch ${MY_PRJ}/ws00/src/gazebo_ros_pkgs/COLCON_IGNORE
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; colcon build --symlink-install'
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws01 ${MY_PRJ}/ws01

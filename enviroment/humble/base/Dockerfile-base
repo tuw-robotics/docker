@@ -1,0 +1,49 @@
+# enviroment desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
+ARG BASE_CONTAINER=$OWNER-enviroment-core
+FROM $BASE_CONTAINER
+
+USER root
+
+RUN apt-get update 
+
+RUN apt-get install -y --no-install-recommends \
+    ros-$ROS_DISTRO-nav2-core \
+    ros-$ROS_DISTRO-nav2-amcl \
+    ros-$ROS_DISTRO-nav2-map-server \
+    ros-$ROS_DISTRO-nav2-lifecycle-manager \
+    ros-$ROS_DISTRO-nav2-costmap-2d \
+    ros-$ROS_DISTRO-test-msgs \
+    ros-$ROS_DISTRO-ament-cmake \
+    ros-$ROS_DISTRO-xacro \
+    ros-$ROS_DISTRO-joint-state-publisher \
+    ros-$ROS_DISTRO-teleop-tools \
+    ros-$ROS_DISTRO-tf2-tools \
+    ros-$ROS_DISTRO-tf-transformations \
+    ros-$ROS_DISTRO-camera-info-manager  \
+    ros-$ROS_DISTRO-laser-filters  \
+    ros-$ROS_DISTRO-laser-geometry \
+    ros-$ROS_DISTRO-rmw-fastrtps-cpp \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+    ros-$ROS_DISTRO-rmw-gurumdds-cpp
+     
+RUN pip3 install transforms3d 
+
+#RUN mkdir /opt/wsDDS && \
+#    git clone --branch  humble https://github.com/ros2/rmw_cyclonedds            /opt/wsDDS/src/ros2/rmw_cyclonedds && \
+#    git clone --branch  master https://github.com/eclipse-cyclonedds/cyclonedds  /opt/wsDDS/src/eclipse-cyclonedds/cyclonedds 
+      
+#RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd /opt/wsDDS; rosdep update; rosdep install -y --from src -i'
+#RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd /opt/wsDDS; colcon build --symlink-install'
+
+RUN  rm -rf /var/lib/apt/lists/*
+RUN  rm -rf ${MY_HOME}/.ros
+
+USER ${MY_USER}
+WORKDIR ${MY_HOME}
+ENV HOME=${MY_HOME}
+CMD /bin/bash

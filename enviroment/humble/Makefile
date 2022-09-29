@@ -7,6 +7,8 @@ RUN = enviroment-desktop
 
 PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+HOSTNAME := $(shell hostname)
+	
 	
 all: help
 
@@ -41,36 +43,42 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build-core:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   -f core/Dockerfile-core        core/.
+	
+build-base:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-base             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f base/Dockerfile-base        base/.  
+	
+build-gazebo:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f gazebo/Dockerfile-gazebo    gazebo/.
 	
 build-desktop:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f desktop/Dockerfile-desktop  desktop/.
 	
 build-ide:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f ide/Dockerfile-ide          ide/.
 
-build-gazebo:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       gazebo/.
-	
 build-nav2:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       nav2/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f nav2/Dockerfile-nav2        nav2/.
 	
-build: build-core build-desktop build-ide build-gazebo
+build: build-core build-base build-desktop build-ide build-gazebo
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
@@ -88,14 +96,17 @@ ${PERSISTENT_IDE}:
 	@echo " rsync -av /home/robot /tmp/home; exit"
 	@docker run --rm -ti -v ${PERSISTENT_IDE}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
-# runs the ide container and mounts a persistent folder as home 
 run-core: 
 	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-core:127.0.0.1" --hostname ${ROS_DISTRO}-core --name ${ROS_DISTRO}-core \
 	${OWNER}/${ROS_DISTRO}-enviroment-core
 	
+run-base: 
+	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-base:127.0.0.1" --hostname ${ROS_DISTRO}-base --name ${ROS_DISTRO}-base \
+	${OWNER}/${ROS_DISTRO}-enviroment-base
+	
 # runs the ide container and mounts a persistent folder as home 
 run-ide: ${PERSISTENT_IDE}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${ROS_DISTRO}:127.0.0.1" --hostname ${ROS_DISTRO} --name ${ROS_DISTRO} \
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-ide:127.0.0.1" --hostname ${HOSTNAME}-ide --name ${HOSTNAME}-ide \
 		-v ${PERSISTENT_IDE}/home:/home \
 		-v ~/.ssh:/home/robot/.ssh:ro \
 		-v ~/.gitconfig:/home/robot/.gitconfig:ro \
@@ -116,17 +127,18 @@ ${PERSISTENT_GZ}:
 	
 # runs the gazebo container and mounts a persistent folder as home 
 run-gz-dev: ${PERSISTENT_GZ}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-gazebo:127.0.0.1" --hostname ${HOSTNAME}-gazebo --name ${HOSTNAME}-gazebo \
 		-v ${PERSISTENT_GZ}/home:/home \
 		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${HOME}/.ssh:/home/robot/.ssh:ro \
 		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
+		-v ${PRJ_DIR}:/home/robot/projects \
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
 # runs the gazebo container
 run-gz: ${PERSISTENT_GZ}
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "gazebo:127.0.0.1" --hostname gazebo --name gazebo \
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-gazebo:127.0.0.1" --hostname ${HOSTNAME}-gazebo --name ${HOSTNAME}-gazebo \
 		-v ${HOME}/.sdformat:/home/robot/.sdformat \
 		-v ${HOME}/.ignition:/home/robot/.ignition \
 		-v ${HOME}/.gazebo:/home/robot/.gazebo \
@@ -139,12 +151,12 @@ repo-rm:
 	rm -rf nav2/tmp/ws*
 	
 repo-clone:
-	git clone --branch ros2        git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
-	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
-	git clone --branch humble      git@github.com:tuw-robotics/navigation2.git            nav2/tmp/ws00/src/navigation2
-	git clone --branch ros2        git@github.com:tuw-robotics/slam_toolbox.git          nav2/tmp/ws00/src/slam_toolbox
-	git clone --branch foxy-devel  git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
-	git clone --branch ros2        git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
+	git clone --branch ros2             git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
+	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_gazebo.git            gazebo/tmp/ws01/src/tuw2_gazebo
+	git clone --branch humble-fastrtps  git@github.com:tuw-robotics/navigation2.git            nav2/tmp/ws00/src/navigation2
+	git clone --branch ros2             git@github.com:tuw-robotics/slam_toolbox.git           nav2/tmp/ws00/src/slam_toolbox
+	git clone --branch foxy-devel       git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
+	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
 
 
 repo-update:
