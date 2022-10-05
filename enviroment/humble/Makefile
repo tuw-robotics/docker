@@ -60,7 +60,7 @@ build-ide:
 build-nav2:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f nav2/Dockerfile-nav2        nav2/.
 	
-build: build-core build-base build-desktop build-ide build-gazebo
+build: build-core build-base build-desktop build-ide build-gazebo build-nav2
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -68,6 +68,7 @@ push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-nav2
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -75,6 +76,7 @@ pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-nav2
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -82,6 +84,7 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-nav2
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
@@ -146,6 +149,13 @@ run-gz: ${PERSISTENT_GZ}
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
+
+# runs the gazebo container
+run-nav2:
+	docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-nav2:127.0.0.1" --hostname ${HOSTNAME}-nav2 --name ${HOSTNAME}-nav2 \
+		-v /dev/shm:/dev/shm \
+	${OWNER}/${ROS_DISTRO}-enviroment-nav2	
+	
 repo-rm:
 	rm -rf gazebo/tmp/ws*
 	rm -rf nav2/tmp/ws*
@@ -157,6 +167,7 @@ repo-clone:
 	git clone --branch ros2             git@github.com:tuw-robotics/slam_toolbox.git           nav2/tmp/ws00/src/slam_toolbox
 	git clone --branch foxy-devel       git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
 	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
+	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/tuw/src/tuw2_launches
 
 
 repo-update:
