@@ -63,12 +63,13 @@ build-ide:
 build-nav2:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-nav2             --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f nav2/Dockerfile-nav2        nav2/.
 	
-build: build-core build-base build-desktop build-ide build-gazebo build-nav2
+build: build-core build-base build-desktop build-ide build-gazebo build-pioneer build-nav2
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-pioneer
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-nav2
@@ -77,6 +78,7 @@ pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-pioneer
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-nav2
@@ -85,6 +87,7 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-base
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-pioneer
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-nav2
@@ -180,6 +183,7 @@ repo-clone:
 	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/tuw/src/tuw2_launches
 	git clone --branch ubuntu22.04      git@github.com:tuw-robotics/AriaCoda.git               pioneer/tmp/AriaCoda
 	git clone --branch humble           git@github.com:tuw-robotics/ros2aria.git               pioneer/tmp/ws00/src/ros2aria
+	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          pioneer/tmp/tuw/src/tuw2_launches
 
 
 repo-update:
