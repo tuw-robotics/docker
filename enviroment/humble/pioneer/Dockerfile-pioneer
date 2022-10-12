@@ -1,0 +1,33 @@
+# enviroment desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+
+ARG UBUNTU_DISTRO=jammy
+ARG ROS_DISTRO=humble
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/$UBUNTU_DISTRO/$ROS_DISTRO
+ARG BASE_CONTAINER=$OWNER-enviroment-base
+FROM $BASE_CONTAINER
+
+USER root
+
+COPY ./tmp/AriaCoda /opt/AriaCoda
+RUN cd /opt/AriaCoda && make
+RUN cd /opt/AriaCoda && make install-default
+
+USER ${MY_USER}
+
+ENV MY_PRJ=${MY_HOME}/projects/ros2/pioneer/
+
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; colcon build --symlink-install'
+
+COPY --chown=${MY_USER}:${MY_USER} ./env.sh ${MY_PRJ}/env.sh
+
+RUN echo "ros2 service call /reset_simulation 'std_srvs/srv/Empty'" >> ~/.bash_history  && \   
+    echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0 robot:=pioneer3dx  X:=-6.0 Y:=-6.0 Theta:=0.7' >> ~/.bash_history  && \   
+    echo 'ros2 launch tuw_gazebo world.launch.py room:=cave' >> ~/.bash_history && \     
+    echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
+
+USER ${MY_USER}
+WORKDIR ${MY_PRJ}
+ENV HOME=${MY_HOME}
+CMD /bin/bash

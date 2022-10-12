@@ -51,6 +51,9 @@ build-base:
 build-gazebo:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f gazebo/Dockerfile-gazebo    gazebo/.
 	
+build-pioneer:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pioneer           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f pioneer/Dockerfile-pioneer pioneer/.
+	
 build-desktop:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f desktop/Dockerfile-desktop  desktop/.
 	
@@ -105,7 +108,14 @@ run-core:
 	
 run-base: 
 	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-base:127.0.0.1" --hostname ${ROS_DISTRO}-base --name ${ROS_DISTRO}-base \
+		--device /dev/ttyS0 \
+		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-base
+	
+# runs the pioneer container
+run-pioneer: 
+	@docker run -ti --rm --privileged --network="host" --add-host "${ROS_DISTRO}-pioneer:127.0.0.1" --hostname ${ROS_DISTRO}-pioneer --name ${ROS_DISTRO}-pioneer \
+	${OWNER}/${ROS_DISTRO}-enviroment-pioneer
 	
 # runs the ide container and mounts a persistent folder as home 
 run-ide: ${PERSISTENT_IDE}
@@ -157,8 +167,9 @@ run-nav2:
 	${OWNER}/${ROS_DISTRO}-enviroment-nav2	
 	
 repo-rm:
-	rm -rf gazebo/tmp/ws*
-	rm -rf nav2/tmp/ws*
+	rm -rf gazebo/tmp/*
+	rm -rf nav2/tmp/*
+	rm -rf pioneer/tmp/*
 	
 repo-clone:
 	git clone --branch ros2             git@github.com:ros-simulation/gazebo_ros_pkgs.git      gazebo/tmp/ws00/src/gazebo_ros_pkgs
@@ -166,10 +177,12 @@ repo-clone:
 	git clone --branch humble-fastrtps  git@github.com:tuw-robotics/navigation2.git            nav2/tmp/ws00/src/navigation2
 	git clone --branch ros2             git@github.com:tuw-robotics/slam_toolbox.git           nav2/tmp/ws00/src/slam_toolbox
 	git clone --branch foxy-devel       git@github.com:ros-teleop/teleop_tools.git             nav2/tmp/ws00/src/teleop_tools
-	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/ws01/src/tuw2_launches
 	git clone --branch ros2             git@github.com:tuw-robotics/tuw2_launches.git          nav2/tmp/tuw/src/tuw2_launches
+	git clone --branch ubuntu22.04      git@github.com:tuw-robotics/AriaCoda.git               pioneer/tmp/AriaCoda
+	git clone --branch humble           git@github.com:tuw-robotics/ros2aria.git               pioneer/tmp/ws00/src/ros2aria
 
 
 repo-update:
 	find ./gazebo/tmp -name .git -exec git --git-dir={} pull \;
 	find ./nav2/tmp -name .git -exec git --git-dir={} pull \;
+	find ./pioneer/tmp -name .git -exec git --git-dir={} pull \;
