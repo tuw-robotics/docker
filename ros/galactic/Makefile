@@ -18,12 +18,23 @@ help:
 login:
 	@docker login registry.auto.tuwien.ac.at -u $(USER)
 	
-build:
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/focal/core/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-bridge           --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
-	@docker build --rm -t $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
+build-core:
+	docker build --rm -t  $(OWNER)/$(ROS_DISTRO)-core             --build-arg ROOT_CONTAINER=$(ROOT_CONTAINER)   ubuntu/focal/core/.
+	
+build-base: build-core
+	docker build --rm -t  $(OWNER)/$(ROS_DISTRO)-base             --build-arg OWNER=$(OWNER)                     ubuntu/focal/base/.
+	
+build-desktop: build-base
+	docker build --rm -t  $(OWNER)/$(ROS_DISTRO)-desktop          --build-arg OWNER=$(OWNER)                     ubuntu/focal/desktop/.
 
+build-bridge: build-base
+	docker build --rm -t  $(OWNER)/$(ROS_DISTRO)-bridge           --build-arg OWNER=$(OWNER)                     ubuntu/focal/bridge/.
+
+build-tuw-bridge: build-base
+	docker build --rm -t  $(OWNER)/$(ROS_DISTRO)-tuw-bridge       --build-arg OWNER=$(OWNER)                     ubuntu/focal/tuw-bridge/.
+
+build: build-core build-base build-desktop build-bridge build-tuw-bridge
+ 
 push:
 	@docker push $(OWNER)/$(ROS_DISTRO)-core
 	@docker push $(OWNER)/$(ROS_DISTRO)-base
