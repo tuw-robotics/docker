@@ -1,6 +1,7 @@
 ROS_DISTRO = noetic
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
+PRJ_DIR = ${HOME}/projects
 
 RUN = enviroment-desktop
 PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
@@ -83,6 +84,16 @@ run-gz: ${PERSISTENT_GZ}
 		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo	
+	
+run-gz-dev: ${PERSISTENT_GZ}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-gazebo:127.0.0.1" --hostname ${HOSTNAME}-gazebo --name ${HOSTNAME}-gazebo \
+		-v ${PERSISTENT_GZ}/home:/home \
+		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
+		-v ${HOME}/.ssh:/home/robot/.ssh:ro \
+		-v ${PERSISTENT_GZ}/runtime-robot:/tmp/runtime-robot \
+		-v ${PRJ_DIR}:/home/robot/projects \
+		-v /dev/shm:/dev/shm \
+	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
 repo-rm:
 	rm -rf gazebo/tmp/*
