@@ -28,12 +28,14 @@ RUN apt-get install -y --no-install-recommends \
     
 RUN rm -rf /var/lib/apt/lists/*
 
+
 USER ${MY_USER}
 
 ENV MY_PRJ=${MY_HOME}/projects/ros2/gazebo/
+RUN mkdir -p ${MY_PRJ}
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
-RUN touch ${MY_PRJ}/ws00/src/gazebo_ros_pkgs/COLCON_IGNORE
+#RUN touch ${MY_PRJ}/ws00/src/gazebo_ros_pkgs/COLCON_IGNORE
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; colcon build --symlink-install'
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws01 ${MY_PRJ}/ws01
@@ -41,7 +43,9 @@ COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws01 ${MY_PRJ}/ws01
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws01; colcon build --symlink-install'
 
 
-COPY --chown=${MY_USER}:${MY_USER} ./env.sh ${MY_PRJ}/env.sh
+RUN cd ${MY_PRJ}/   && \ 
+    ln -s ./ws01/src/tuw2_gazebo/ide/env.sh  && \ 
+    ln -s ./ws01/src/tuw2_gazebo/ide/readme.md
 
 RUN echo "ros2 service call /reset_simulation 'std_srvs/srv/Empty'" >> ~/.bash_history  && \   
     echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0 robot:=pioneer3dx  X:=-6.0 Y:=-6.0 Theta:=0.7' >> ~/.bash_history  && \   

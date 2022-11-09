@@ -4,7 +4,6 @@ ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 PRJ_DIR = ${HOME}/projects
 
 RUN = enviroment-desktop
-
 PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 HOSTNAME := $(shell hostname)
