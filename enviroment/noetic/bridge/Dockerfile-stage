@@ -1,0 +1,41 @@
+# enviroment desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG BASE_CONTAINER=$OWNER-enviroment-bridge
+FROM $BASE_CONTAINER
+
+ENV ROS1_DISTRO=noetic
+USER root
+    
+RUN apt-get update
+RUN apt-get -y dist-upgrade
+
+RUN apt-get install -y ros-$ROS1_DISTRO-stage \
+	ros-$ROS1_DISTRO-teleop-twist-keyboard  \
+	ros-$ROS1_DISTRO-rqt-reconfigure  \
+	ros-$ROS1_DISTRO-rqt-common-plugins  \
+	ros-$ROS1_DISTRO-marker-msgs
+    
+# setup entrypoint
+#COPY ./ros_entrypoint.sh /
+
+USER ${MY_USER}
+ENV MY_PRJ=${MY_HOME}/projects/ros/bridge/
+RUN mkdir -p ${MY_PRJ}
+
+
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
+RUN /bin/bash -c '. /opt/ros/${ROS1_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; catkin_make'
+
+    
+#RUN echo 'source ${MY_PRJ}/ws00/devel/setup.bash' >> ~/.bashrc
+
+RUN echo 'roslaunch stage_ros world.launch' >> ~/.bash_history  && \     
+    echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
+
+USER ${MY_USER}
+WORKDIR ${MY_PRJ}
+ENV HOME=${MY_HOME}
+CMD /bin/bash
+

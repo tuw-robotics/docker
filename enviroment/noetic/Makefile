@@ -31,16 +31,20 @@ help:
 	@echo ""
 
 build-core:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   core/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-core             --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}                -f core/Dockerfile-core core/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge           --build-arg ROOT_CONTAINER=ros:galactic-ros1-bridge-focal   -f core/Dockerfile-bridge core/.
 	
 build-desktop:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}       desktop/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    desktop/.
 	
 build-ide:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}       ide/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    ide/.
 	
 build-gazebo:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f gazebo/Dockerfile-gazebo    gazebo/.
+	
+build-bridge:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage     --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f bridge/Dockerfile-stage     bridge/.
 	
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
@@ -66,13 +70,21 @@ run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
+
+	
+run-bridge-stage:
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-bridge-stage:127.0.0.1" --hostname ${HOSTNAME}-bridge-stage --name ${HOSTNAME}-bridge-stage \
+		-v /dev/shm:/dev/shm \
+	${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage	
+	
+
 ${PERSISTENT_GZ}:
 	@echo create PERSISTENT_GZ folder: ${PERSISTENT_GZ}
 	@mkdir -p ${PERSISTENT_GZ}/home \
 	          ${PERSISTENT_GZ}/runtime-robot
 	@chmod 0700 -R ${PERSISTENT_GZ}/runtime-robot
 	@echo "Run the following command in your container"
-	@echo " rsync -av /home/robot /tmp/home; exit"
+	@echo " rsync -av --delete /home/robot /tmp/home; exit"
 	@docker run --rm -ti -v ${PERSISTENT_GZ}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	
 # runs the gazebo container
@@ -95,14 +107,19 @@ run-gz-dev: ${PERSISTENT_GZ}
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 
+rm-persistent-data:
+	rm -rf ${HOME}/tmp/${OWNER}
+	
 repo-rm:
 	rm -rf gazebo/tmp/*
+	rm -rf bridge/tmp/*
 	
 repo-clone:
 	git clone --branch noetic-devel     git@github.com:ros-simulation/gazebo_ros_pkgs.git    gazebo/tmp/ws00/src/gazebo_ros_pkgs
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             gazebo/tmp/ws00/src/tuw_msgs
 	git clone --branch noetic-devel     git@github.com:tuw-robotics/tuw_gazebo.git           gazebo/tmp/ws01/src/tuw_gazebo
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         gazebo/tmp/ws01/src/tuw_launches
+	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
 
 
 repo-update:

@@ -50,8 +50,10 @@ RUN cd ${MY_PRJ}/; ln -s ./ws01/src/tuw_gazebo/ide/env.sh
     
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
-RUN echo 'ros2 launch tuw_gazebo_models spawn_robot.launch.py model_name:=robot0 robot:=pioneer3dx  X:=-6.0 Y:=-6.0 Theta:=0.7' >> ~/.bash_history  && \   
-    echo 'ros2 launch tuw_gazebo world.launch.py room:=cave' >> ~/.bash_history && \     
+RUN echo 'roslaunch tuw_gazebo_models room_world.launch room:=roblab' >> ~/.bash_history  && \   
+    echo 'roslaunch tuw_gazebo_models room_world.launch room:=cave' >> ~/.bash_history  && \   
+    echo 'roslaunch tuw_gazebo_models pioneer3dx.gazebo.launch motor_plugin:=diff_twist differential_odom_source:=encoder' >> ~/.bash_history  && \ 
+    echo 'roslaunch tuw_gazebo_models r1_rviz.launch' >> ~/.bash_history && \     
     echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 USER ${MY_USER}
