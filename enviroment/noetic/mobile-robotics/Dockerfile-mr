@@ -1,0 +1,60 @@
+# enviroment desktop
+# created by Markus Bader <markus.bader@tuwien.ac.at>
+
+ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
+ARG BASE_CONTAINER=$OWNER-enviroment-ide
+FROM $BASE_CONTAINER
+
+USER root
+
+ENV MR_DIR=${MY_HOME}/projects/mr
+
+USER root
+RUN apt-get update
+RUN apt install -y \
+    ros-${ROS_DISTRO}-amcl \
+    ros-${ROS_DISTRO}-ros-base \
+    ros-${ROS_DISTRO}-gmapping \
+    ros-${ROS_DISTRO}-tf \
+    ros-${ROS_DISTRO}-teleop-twist-keyboard \
+    ros-${ROS_DISTRO}-marker-msgs \
+    ros-${ROS_DISTRO}-map-server \
+    ros-${ROS_DISTRO}-move-base  \
+    ros-${ROS_DISTRO}-navigation \
+    ros-${ROS_DISTRO}-rviz  \
+    ros-${ROS_DISTRO}-rqt-reconfigure \
+	ros-${ROS_DISTRO}-rqt-common-plugins \
+    ros-${ROS_DISTRO}-slam-gmapping \
+    ros-${ROS_DISTRO}-stage \
+    git tmux vim wget gzip iputils-ping
+    
+USER ${MY_USER}
+RUN mkdir -p ${MR_DIR}/src/
+COPY --chown=${MY_USER}:${MY_USER} ./utils/stage_ros-20.04.tar.gz ${MR_DIR}/src/
+COPY --chown=${MY_USER}:${MY_USER} ./utils/mr2021.tar.gz ${MR_DIR}/src/
+RUN cd ${MR_DIR}/src &&  \
+	tar -xzvf mr2021.tar.gz  &&  \
+	tar -xzvf stage_ros-20.04.tar.gz
+	
+	
+RUN /bin/bash -c 'source /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MR_DIR}; catkin_make -DCMAKE_BUILD_TYPE=Debug'
+
+
+RUN echo "rm -rf ${MR_DIR}/src/mr* && git clone git@github.com:mx-teaching/mr-20.04.git ${MR_DIR}/src/mr" >> ~/.bash_history  &&  \
+	echo "catkin_make -DCMAKE_BUILD_TYPE=Debug" >> ~/.bash_history   &&  \
+	echo "rosrun rqt_reconfigure rqt_reconfigure" >> ~/.bash_history   &&  \
+	echo "roslaunch stage_ros world.launch world:=line.world" >> ~/.bash_history   &&  \
+	echo "roslaunch mr_local_planner planner.launch world:=line.world mode:=1" >> ~/.bash_history   &&  \
+	echo "roslaunch stage_ros world.launch world:=cave.world" >> ~/.bash_history   &&  \
+	echo "roslaunch mr_local_planner planner.launch stage:=1 world:=cave.world mode:=1" >> ~/.bash_history  &&  \
+	echo "tmux new -s mpn \; split-window -v \; split-window -v \; select-pane -t 0 \; split-window -v \; select-pane -t 0 \; split-window -h \; select-pane -t 0 \; attach" >> ~/.bash_history
+
+# clean apt
+USER root
+RUN rm -rf /var/lib/apt/lists/*
+
+USER ${MY_USER}
+WORKDIR ${MR_DIR}
+ENV HOME ${MY_HOME}
+CMD /bin/bash
+

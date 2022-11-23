@@ -3,6 +3,7 @@ OWNER = registry.auto.tuwien.ac.at/roblab/docker/bionic
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 
 RUN	= mpc
+HOSTNAME := $(shell hostname)
 
 all: help
 
@@ -43,7 +44,10 @@ clean:
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-	@docker run	-ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" -v ~/.ssh:/home/robot/.ssh:ro -v ~/.gitconfig:/home/robot/.gitconfig:ro --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mpn:127.0.0.1" --hostname ${HOSTNAME}-mpn --name ${HOSTNAME}-mpn \
+		-v /dev/shm:/dev/shm \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+	${OWNER}/${ROS_DISTRO}-${RUN}
 
 
 update:
@@ -65,4 +69,4 @@ checkout:
 	git clone --branch master  git@github.com:tuw-robotics/tuw_mpn.git              mpc/tmp/ws03/src/tuw_mpn    
 	git clone --branch master  git@github.com:tuw-robotics/tuw_nav_costmap.git      mpc/tmp/ws03/src/tuw_nav_costmap    
 	git clone --branch master  git@github.com:tuw-robotics/tuw_launches.git         mpc/tmp/tuw/src/tuw_launches
-# 	git clone --branch master  git@github.com:tuw-robotics/tuw_gazebo.git         mpc/tmp/tuw/src/tuw_gazebo
+#  	git clone --branch master  git@github.com:tuw-robotics/tuw_gazebo.git           mpc/tmp/tuw/src/tuw_gazebo

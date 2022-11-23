@@ -46,6 +46,9 @@ build-gazebo:
 build-bridge:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage     --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f bridge/Dockerfile-stage     bridge/.
 	
+build-mobile-robotics:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics  --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f mobile-robotics/Dockerfile-mr     mobile-robotics/.
+	
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
@@ -71,6 +74,10 @@ run:
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
 
+	
+run-mobile-robotics:
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mr:127.0.0.1" --hostname ${HOSTNAME}-mr --name ${HOSTNAME}-mr \
+	${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics	
 	
 run-bridge-stage:
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-bridge-stage:127.0.0.1" --hostname ${HOSTNAME}-bridge-stage --name ${HOSTNAME}-bridge-stage \
