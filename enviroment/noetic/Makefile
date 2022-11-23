@@ -49,6 +49,9 @@ build-bridge:
 build-mobile-robotics:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics  --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f mobile-robotics/Dockerfile-mr     mobile-robotics/.
 	
+build-pathfollowing:
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing  --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f pathfollowing/Dockerfile-pathfollowing     pathfollowing/.
+	
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
@@ -74,6 +77,9 @@ run:
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
 
+run-pathfollowing:
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-pathfollowing:127.0.0.1" --hostname ${HOSTNAME}-pathfollowing --name ${HOSTNAME}-pathfollowing \
+	${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing	
 	
 run-mobile-robotics:
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mr:127.0.0.1" --hostname ${HOSTNAME}-mr --name ${HOSTNAME}-mr \
@@ -128,6 +134,15 @@ repo-clone:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         gazebo/tmp/ws01/src/tuw_launches
 	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
 
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             pathfollowing/tmp/ws00/src/tuw_msgs
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git         pathfollowing/tmp/ws00/src/tuw_geometry
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_multi_robot.git      pathfollowing/tmp/ws01/src/tuw_multi_robot
+	git clone --branch master           git@github.com:tuw-robotics/tuw_rviz.git             pathfollowing/tmp/ws01/src/tuw_rviz
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_diffdrive.git        pathfollowing/tmp/ws01/src/tuw_diffdrive
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_control.git          pathfollowing/tmp/ws01/src/tuw_control	
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_global_planner.git   pathfollowing/tmp/ws01/src/tuw_global_planner	
+	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         pathfollowing/tmp/tuw/src/tuw_launches
+	
 
 repo-update:
 	find ./gazebo/tmp -name .git -exec git --git-dir={} pull \;
