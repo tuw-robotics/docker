@@ -18,6 +18,7 @@ ENV MY_HOME=/home/${MY_USER}
 
 ENV CONFIG_DIR=./config
 ENV SCRIPTS_DIR=./scripts
+ENV DEB_DIR=./deb
 ENV INSTALL_DIR=/install
 
 USER root
@@ -63,16 +64,25 @@ RUN apt-get install -y     \
       vim              \
       wget
       
+COPY ${DEB_DIR}/glow_1.4.1_linux_amd64.deb ${INSTALL_DIR}/
+RUN dpkg -i ${INSTALL_DIR}/glow_1.4.1_linux_amd64.deb
+    
 RUN apt-get install -y openssh-server
 RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
 
 USER ${MY_USER}
 
+COPY --chown=${MY_USER}:${MY_USER} ./bridge.md ${MY_HOME}/readme.md
 RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
+RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
 # clean apt
 USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
+
+# setup entrypoint
+COPY ./entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
