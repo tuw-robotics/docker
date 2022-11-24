@@ -103,7 +103,6 @@ run-ide: ${PERSISTENT_IDE}
 	${OWNER}/${ROS_DISTRO}-enviroment-ide	
 	
 ${PERSISTENT_MR}:
-	@echo "\e[1;46m\n Home fold folder for containter created under \n\n  ${PERSISTENT_GZ} \n\e[0m"
 	@mkdir -p ${PERSISTENT_MR}/home ${PERSISTENT_MR}/runtime-robot
 	@chmod 0700 -R ${PERSISTENT_MR}/runtime-robot
 	@docker run --rm -ti --entrypoint='' -v ${PERSISTENT_MR}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics rsync -a --delete /home/robot /tmp/home
