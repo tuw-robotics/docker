@@ -72,15 +72,15 @@ RUN sed -ri 's/^#?Port\s+.*/Port 2222/' /etc/ssh/sshd_config
 
 USER ${MY_USER}
 
-COPY --chown=${MY_USER}:${MY_USER} ./bridge.md ${MY_HOME}/readme.md
 RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
 RUN echo "source /opt/ros/galactic/setup.bash" >> ~/.bash_history
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bash_history
 
-# clean apt
+COPY --chown=${MY_USER}:${MY_USER} ./bridge.md ${MY_HOME}/readme.md
 USER root
+# clean apt
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 
 # setup entrypoint

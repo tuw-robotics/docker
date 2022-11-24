@@ -4,6 +4,7 @@ ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 PRJ_DIR = ${HOME}/projects
 
 PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
+PERSISTENT_MR = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 HOSTNAME := $(shell hostname)
 	
@@ -32,22 +33,22 @@ build-core:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge           --build-arg ROOT_CONTAINER=ros:galactic-ros1-bridge-focal   -f core/Dockerfile-bridge core/.
 	
 build-desktop:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    desktop/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-desktop          --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f desktop/Dockerfile-desktop                desktop/.
 	
 build-ide:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    ide/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-ide              --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f ide/Dockerfile-ide                        ide/.
 	
 build-gazebo:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f gazebo/Dockerfile-gazebo    gazebo/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-gazebo           --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f gazebo/Dockerfile-gazebo                  gazebo/.
 	
 build-bridge:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage     --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f bridge/Dockerfile-stage     bridge/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage     --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f bridge/Dockerfile-stage                   bridge/.
 	
 build-mobile-robotics:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics  --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f mobile-robotics/Dockerfile-mr     mobile-robotics/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics  --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f mobile-robotics/Dockerfile-mr             mobile-robotics/.
 	
 build-pathfollowing:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing  --build-arg OWNER=${OWNER}/${ROS_DISTRO}       -f pathfollowing/Dockerfile-pathfollowing     pathfollowing/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing  --build-arg OWNER=${OWNER}/${ROS_DISTRO}                      -f pathfollowing/Dockerfile-pathfollowing    pathfollowing/.
 	
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
@@ -59,18 +60,21 @@ push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 run-core:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-core:127.0.0.1" --hostname ${HOSTNAME}-core --name ${HOSTNAME}-core \
@@ -78,15 +82,45 @@ run-core:
 
 run-bridge:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-bridge:127.0.0.1" --hostname ${HOSTNAME}-bridge --name ${HOSTNAME}-bridge \
-	${OWNER}/${ROS_DISTRO}-enviroment-bridge	
+	${OWNER}/${ROS_DISTRO}-enviroment-bridge
+	
+run-desktop:
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-desktop:127.0.0.1" --hostname ${HOSTNAME}-desktop --name ${HOSTNAME}-desktop \
+	${OWNER}/${ROS_DISTRO}-enviroment-desktop
+	
+${PERSISTENT_IDE}:
+	@mkdir -p ${PERSISTENT_IDE}/home ${PERSISTENT_IDE}/runtime-robot
+	@chmod 0700 -R ${PERSISTENT_IDE}/runtime-robot
+	@docker run --rm -ti --entrypoint='' -v ${PERSISTENT_IDE}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-ide rsync -a --delete /home/robot /tmp/home
+	@echo "\e[1;46m\n Home folder for containter created under \n\n  ${PERSISTENT_GZ} \n\e[0m"
 
+run-ide-clear:
+	rm -rf ${PERSISTENT_IDE}
+	
+run-ide: ${PERSISTENT_IDE}
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-ide:127.0.0.1" --hostname ${HOSTNAME}-ide --name ${HOSTNAME}-ide \
+	-v ${PERSISTENT_IDE}/home:/home \
+	${OWNER}/${ROS_DISTRO}-enviroment-ide	
+	
+${PERSISTENT_MR}:
+	@echo "\e[1;46m\n Home fold folder for containter created under \n\n  ${PERSISTENT_GZ} \n\e[0m"
+	@mkdir -p ${PERSISTENT_MR}/home ${PERSISTENT_MR}/runtime-robot
+	@chmod 0700 -R ${PERSISTENT_MR}/runtime-robot
+	@docker run --rm -ti --entrypoint='' -v ${PERSISTENT_MR}/home:/tmp/home ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics rsync -a --delete /home/robot /tmp/home
+	@echo "\e[1;46m\n Home fold folder for containter created under \n\n  ${PERSISTENT_GZ} \n\e[0m"
+
+run-mobile-robotics-clear:
+	rm -rf ${PERSISTENT_MR}
+
+run-mobile-robotics: ${PERSISTENT_MR}
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mr:127.0.0.1" --hostname ${HOSTNAME}-mr --name ${HOSTNAME}-mr \
+	-v ${PERSISTENT_MR}/home:/home \
+	${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
+	
 run-pathfollowing:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-pathfollowing:127.0.0.1" --hostname ${HOSTNAME}-pathfollowing --name ${HOSTNAME}-pathfollowing \
 	${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing	
 	
-run-mobile-robotics:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mr:127.0.0.1" --hostname ${HOSTNAME}-mr --name ${HOSTNAME}-mr \
-	${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics	
 	
 run-bridge-stage:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-bridge-stage:127.0.0.1" --hostname ${HOSTNAME}-bridge-stage --name ${HOSTNAME}-bridge-stage \
@@ -133,9 +167,9 @@ repo-rm:
 repo-clone:
 	git clone --branch noetic-devel     git@github.com:ros-simulation/gazebo_ros_pkgs.git    gazebo/tmp/ws00/src/gazebo_ros_pkgs
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             gazebo/tmp/ws00/src/tuw_msgs
+	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
 	git clone --branch noetic-devel     git@github.com:tuw-robotics/tuw_gazebo.git           gazebo/tmp/ws01/src/tuw_gazebo
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         gazebo/tmp/ws01/src/tuw_launches
-	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
 
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             pathfollowing/tmp/ws00/src/tuw_msgs
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git         pathfollowing/tmp/ws00/src/tuw_geometry

@@ -25,6 +25,7 @@ RUN if [ "$INSTALL_CODE" = "true" ]; then $INSTALL_DIR/install/ide/install_code.
 ARG INSTALL_KDEVELOP=true
 RUN if [ "$INSTALL_KDEVELOP" = "true" ]; then $INSTALL_DIR/install/ide/install_kdevelop.sh; fi
 
+COPY --chown=${MY_USER}:${MY_USER} ./ide.md ${MY_HOME}/readme.md
 USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*
 

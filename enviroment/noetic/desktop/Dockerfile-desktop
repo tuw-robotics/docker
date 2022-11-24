@@ -29,6 +29,8 @@ RUN chmod -R a+x ${INSTALL_DIR}
 ARG INSTALL_VNC=true
 RUN if [ "$INSTALL_VNC" = "true" ]; then $INSTALL_DIR/install/vnc/install_turbovnc.sh; fi
 
+USER ${MY_USER}
+COPY --chown=${MY_USER}:${MY_USER} ./desktop.md ${MY_HOME}/readme.md
 
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
