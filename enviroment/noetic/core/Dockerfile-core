@@ -78,12 +78,11 @@ COPY --chown=${MY_USER}:${MY_USER} ./core.md ${MY_HOME}/readme.md
 RUN sed -i 's/01;32/01;31/g' ~/.bashrc # change bash colour to red
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 	
+RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bash_history
+	
 # clean apt
 USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/* 
-
-
-
 
 # setup entrypoint
 COPY ./entrypoint.sh /

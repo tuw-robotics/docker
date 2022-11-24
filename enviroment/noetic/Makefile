@@ -3,7 +3,6 @@ OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-desktop
 PRJ_DIR = ${HOME}/projects
 
-RUN = enviroment-desktop
 PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 HOSTNAME := $(shell hostname)
@@ -25,9 +24,7 @@ help:
 	@echo "   make login USER=mbader  - authenticate container Registry"
 	@echo "   make pull               - pull all images"
 	@echo "   make push               - push all images"
-	@echo "   make clean              - remove all images"
-	@echo "   make run                - runs the image: $$\$${OWNER}/$$\$${ROS_DISTRO}/$$\$${RUN}"
-	
+	@echo "   make clean              - remove all images"	
 	@echo ""
 
 build-core:
@@ -75,9 +72,9 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 
-run:
-	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${RUN}:127.0.0.1" --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN} 
+run-core:
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-core:127.0.0.1" --hostname ${HOSTNAME}-core --name ${HOSTNAME}-core \
+	${OWNER}/${ROS_DISTRO}-enviroment-core
 
 run-bridge:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-bridge:127.0.0.1" --hostname ${HOSTNAME}-bridge --name ${HOSTNAME}-bridge \
