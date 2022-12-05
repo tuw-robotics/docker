@@ -50,8 +50,8 @@ RUN touch ${MY_PRJ}/env.sh && \
     chmod +x ${MY_PRJ}/env.sh && \ 
     echo 'source /opt/ros/noetic/setup.bash' >> ${MY_PRJ}/env.sh  && \   
     echo 'echo "** ROS /opt/ros/noetic/setup.bash initialized **"' >> ${MY_PRJ}/env.sh  && \   
-    echo 'source $HOME/projects/ros/pathfollowing/ws00/devel/setup.bash' >> ${MY_PRJ}/env.sh  && \  
-    echo 'source $HOME/projects/ros/pathfollowing/ws01/devel/setup.bash'  >> ${MY_PRJ}/env.sh
+    echo 'source $HOME/projects/ros/gazebo/ws00/devel/setup.bash' >> ${MY_PRJ}/env.sh  && \  
+    echo 'source $HOME/projects/ros/gazebo/ws01/devel/setup.bash'  >> ${MY_PRJ}/env.sh
 
 RUN echo 'roslaunch tuw_gazebo_models room_world.launch room:=roblab' >> ~/.bash_history  && \   
     echo 'roslaunch tuw_gazebo_models room_world.launch room:=cave' >> ~/.bash_history  && \   

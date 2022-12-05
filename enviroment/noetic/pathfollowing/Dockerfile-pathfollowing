@@ -58,7 +58,10 @@ RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_i
     echo 'source pathfollowing/env.h' >> ~/.bash_history && \     
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
+COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/readme.md
+USER root
+
 USER ${MY_USER}
-WORKDIR ${${MY_HOME}/projects/ros/}
+WORKDIR ${MY_PRJ}
 ENV HOME=${MY_HOME}
 CMD /bin/bash

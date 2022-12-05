@@ -53,13 +53,15 @@ build-pathfollowing:
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
-build: build-core build-desktop build-ide build-gazebo
+build: build-core build-desktop build-ide build-gazebo build-pathfollowing build-mobile-robotics
 
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 	
 pull:
@@ -67,6 +69,8 @@ pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 clean:
@@ -74,6 +78,8 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 run-core:
@@ -162,6 +168,7 @@ rm-persistent-data:
 repo-rm:
 	rm -rf gazebo/tmp/*
 	rm -rf bridge/tmp/*
+	rm -rf pathfollowing/tmp/*
 	
 repo-clone:
 	git clone --branch noetic-devel     git@github.com:ros-simulation/gazebo_ros_pkgs.git    gazebo/tmp/ws00/src/gazebo_ros_pkgs
@@ -182,3 +189,5 @@ repo-clone:
 
 repo-update:
 	find ./gazebo/tmp -name .git -exec git --git-dir={} pull \;
+	find ./bridge/tmp -name .git -exec git --git-dir={} pull \;
+	find ./pathfollowing/tmp -name .git -exec git --git-dir={} pull \;
