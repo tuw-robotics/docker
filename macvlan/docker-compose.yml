@@ -1,0 +1,35 @@
+---
+version: '2.4'
+services:
+
+  portainer:
+    image: ubuntu:xx
+    extra_hosts:
+        s1: 192.168.33.10
+        rudi: 192.168.33.80
+    hostname: ubuntu
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+      - VERSION=14.04
+      - MY_USER=max
+      - MY_PASSWORD="superman"
+    container_name: ubuntu
+    restart: always
+    command: ["sleep","infinity"]
+    networks:
+      dockervlan:
+        ipv4_address: 192.168.16.4
+
+networks:
+  dockervlan:
+    name: dockervlan
+    driver: macvlan
+    driver_opts:
+      parent: enp2s0
+    ipam:
+      config:
+        - subnet: "192.168.16.0/24"
+          ip_range: "192.168.16.7/31"
+          gateway: "192.168.16.1"
