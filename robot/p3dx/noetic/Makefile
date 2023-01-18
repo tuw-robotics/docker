@@ -23,7 +23,6 @@ help:
 	@echo "   make push               - push all images"
 	@echo "   make clean              - remove all images"
 	@echo "   make run                - runs the image: $$\$${OWNER}/$$\$${ROS_DISTRO}/$$\$${RUN}"
-	
 	@echo ""
 
 login:
@@ -44,4 +43,3 @@ clean:
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
-	
