@@ -32,9 +32,6 @@ ENV PROJECT_DIR=${MY_HOME}/projects/catkin_ws
 
 RUN apt-get update && apt-get -y upgrade
 
-# TODO: check how to replace this with rosdep and for which package this is required
-RUN apt-get install -y libncurses5-dev libncursesw5-dev
-
 # Install locale and set
 RUN apt-get install -y iputils-ping bash-completion
 
