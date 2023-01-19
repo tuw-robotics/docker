@@ -26,7 +26,7 @@ help:
 	@echo ""
 
 login:
-	@docker login registry.auto.tuwien.ac.at -u ${USER}
+	@docker login registry.auto.tuwien.ac.at -u ${ROBLAB_USER}
 
 build:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-${RUN} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
