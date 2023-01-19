@@ -47,4 +47,3 @@ run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${OWNER}/${ROS_DISTRO}-${RUN}
-#	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
