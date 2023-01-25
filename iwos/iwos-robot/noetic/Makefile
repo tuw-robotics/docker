@@ -1,8 +1,9 @@
 ROS_DISTRO = noetic
 OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
 ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
+THIS_CONTAINER = ${OWNER}/${ROS_DISTRO}-iwos-robot
+THIS_RUN = ${ROS_DISTRO}-iwos-robot
 
-RUN = iwos-core
 SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 
 all: help
@@ -12,38 +13,42 @@ help:
 	@echo "-- Help Menu for ROS ${ROS_DISTRO} based on $$\$${ROOT_CONTAINER}"
 	@echo ""
 	@echo "   global options with defaults:"
-	@echo "     ROS_DISTRO=noetic"
-	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal"
-	@echo "     ROOT_CONTAINER=$$\$${OWNER}/noetic-core"
-	@echo "     RUN=enviroment-core"
+	@echo "     ROS_DISTRO=${ROS_DISTRO}"
+	@echo "     OWNER=${OWNER}"
+	@echo "     ROOT_CONTAINER=${ROOT_CONTAINER}"
+	@echo "     RUN=${RUN}"
 	@echo ""
-	@echo "   make build              - build all images"
-	@echo "   make login USER=mbader  - authenticate container Registry"
-	@echo "   make pull               - pull all images"
-	@echo "   make push               - push all images"
-	@echo "   make clean              - remove all images"
-	@echo "   make run                - runs the image: $$\$${OWNER}/$$\$${ROS_DISTRO}/$$\$${RUN}"
+	@echo "   make login						- authenticate container Registry"
+	@echo "   make build      			- build the image"
+	@echo "   make build_no_cache		- build the image ()"
+	@echo "   make pull       			- pull the image from the container registry"
+	@echo "   make echo_pull       	- prints the command to pull the image"
+	@echo "   make push       			- push the image to the container registry"
+	@echo "   make clean      			- remove the image"
+	@echo "   make run        			- runs the image"
 	@echo ""
 
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${ROBLAB_USER}
 
 build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-${RUN} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
+	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
 
 build_no_cache:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-${RUN} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/. --no-cache
+	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/. --no-cache
 
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker push ${THIS_CONTAINER}
 
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker pull ${THIS_CONTAINER}
+
+echo_pull_command:
+	@echo "docker pull ${THIS_CONTAINER}"
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker rmi -f ${THIS_CONTAINER}
 
 run:
-	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
-
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${OWNER}/${ROS_DISTRO}-${RUN}
+	@echo ${THIS_CONTAINER}
+	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
