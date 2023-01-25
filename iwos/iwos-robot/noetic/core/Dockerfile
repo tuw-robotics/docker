@@ -44,6 +44,7 @@ RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${PROJECT_DIR}; rosdep
 USER ${MY_USER}
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${PROJECT_DIR}; catkin_make'
 RUN echo 'source ${PROJECT_DIR}/devel/setup.bash' >> ~/.bashrc
+RUN echo 'alias hints="glow ~/entrypoint.md"' >> ~/.bashrc
 
 COPY --chown=${MY_USER}:${MY_USER} ./entrypoint.md ${MY_HOME}/entrypoint.md
 
