@@ -43,12 +43,14 @@ push:
 pull:
 	@docker pull ${THIS_CONTAINER}
 
-echo_pull_command:
+echo_pull:
 	@echo "docker pull ${THIS_CONTAINER}"
 
 clean:
 	@docker rmi -f ${THIS_CONTAINER}
 
 run:
-	@echo ${THIS_CONTAINER}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
+
+echo_run:
+	@echo "docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}"
