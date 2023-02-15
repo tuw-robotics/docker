@@ -4,6 +4,7 @@ ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
 
 RUN = p3dx-core
 SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
+PROJECT_DIR = $(shell pwd)
 
 all: help
 
@@ -29,7 +30,7 @@ login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
+	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" p3dx/.
 	
 push:
 	@docker push ${OWNER}/${ROS_DISTRO}-p3dx-core
@@ -43,3 +44,16 @@ clean:
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+
+p3dx/tmp/p3dx/src/rosaria:
+	git clone -b master   git@github.com:tuw-robotics/rosaria.git $@
+	
+p3dx/tmp/p3dx/src/tuw_p3dx:
+	git clone -b master git@github.com:tuw-robotics/tuw_p3dx.git $@
+
+repo-clone: \
+	p3dx/tmp/p3dx/src/rosaria \
+	p3dx/tmp/p3dx/src/tuw_p3dx 
+
+repo-pull:
+	find . -type d -name .git -exec echo {} \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;
