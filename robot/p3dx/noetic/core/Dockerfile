@@ -20,8 +20,9 @@ RUN chmod 600 /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-RUN git clone --branch master  git@github.com:tuw-robotics/rosaria.git             p3dx/src/rosaria
-RUN git clone --branch master  git@github.com:tuw-robotics/tuw_p3dx.git            p3dx/src/tuw_p3dx
+RUN git clone --branch master  https://github.com/tuw-robotics/rosaria.git             p3dx/src/rosaria
+RUN git clone --branch master  https://github.com/tuw-robotics/tuw_p3dx.git            p3dx/src/tuw_p3dx
+RUN git clone --branch master  https://github.com/tuw-robotics/tuw_teleop.git          p3dx/src/tuw_teleop
 
 FROM $ROOT_CONTAINER
 USER root
