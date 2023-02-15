@@ -11,7 +11,31 @@ ENV INSTALL_DIR=/install
 
 USER root
 
-RUN apt-get update 
+
+# setup keys
+#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys D2486D2DD83DB69272AFE98867170598AF249743
+
+# setup sources.list
+RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-latest.list && \
+    wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+    
+RUN apt-get update
+RUN apt-get -y dist-upgrade
+
+RUN apt-get install -y --no-install-recommends \
+    libgazebo11 \
+    libgazebo11-dev \
+    ros-$ROS_DISTRO-gazebo-ros-control \
+    ros-$ROS_DISTRO-gazebo-ros-pkgs    \
+    ros-$ROS_DISTRO-gazebo-ros  
+    
+RUN apt-get install -y ros-$ROS_DISTRO-gmapping \
+	ros-$ROS_DISTRO-amcl  \
+	ros-$ROS_DISTRO-map-server  \
+	ros-$ROS_DISTRO-move-base  \
+	ros-$ROS_DISTRO-navigation  \
+	ros-$ROS_DISTRO-rviz \
+    ros-$ROS_DISTRO-laser-filters
 
 # copy scripts to container
 COPY ${SCRIPTS_DIR}/ ${INSTALL_DIR}/
@@ -25,6 +49,9 @@ RUN if [ "$INSTALL_CODE" = "true" ]; then $INSTALL_DIR/install/ide/install_code.
 ARG INSTALL_KDEVELOP=true
 RUN if [ "$INSTALL_KDEVELOP" = "true" ]; then $INSTALL_DIR/install/ide/install_kdevelop.sh; fi
 
+RUN echo 'tmux new -s ide \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history  && \
+    echo 'cd ${MY_HOME}/projects/ros' >> ~/.bash_history
+    
 COPY --chown=${MY_USER}:${MY_USER} ./ide.md ${MY_HOME}/readme.md
 USER root
 RUN apt-get autoclean && apt-get autoremove && rm -rf /var/lib/apt/lists/*

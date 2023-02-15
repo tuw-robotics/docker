@@ -53,10 +53,10 @@ RUN touch ${MY_PRJ}/env.sh && \
     echo 'source $HOME/projects/ros/gazebo/ws00/devel/setup.bash' >> ${MY_PRJ}/env.sh  && \  
     echo 'source $HOME/projects/ros/gazebo/ws01/devel/setup.bash'  >> ${MY_PRJ}/env.sh
 
-RUN echo 'roslaunch tuw_gazebo_models room_world.launch room:=roblab' >> ~/.bash_history  && \   
-    echo 'roslaunch tuw_gazebo_models room_world.launch room:=cave' >> ~/.bash_history  && \   
-    echo 'roslaunch tuw_gazebo_models pioneer3dx.gazebo.launch motor_plugin:=diff_twist differential_odom_source:=encoder' >> ~/.bash_history  && \ 
-    echo 'roslaunch tuw_gazebo_models r1_rviz.launch' >> ~/.bash_history && \     
+RUN echo 'roslaunch tuw_gazebo_models room_world.launch room:=roblab' >> ~/.bash_history  && \
+    echo 'roslaunch tuw_gazebo_models room_world.launch room:=cave' >> ~/.bash_history  && \
+    echo 'roslaunch tuw_gazebo_models pioneer3dx.gazebo.launch motor_plugin:=diff_twist differential_odom_source:=encoder' >> ~/.bash_history  && \
+    echo 'roslaunch tuw_gazebo_models r1_rviz.launch' >> ~/.bash_history && \
     echo 'tmux new -s gz \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 COPY --chown=${MY_USER}:${MY_USER} ./gazebo.md ${MY_PRJ}/readme.md

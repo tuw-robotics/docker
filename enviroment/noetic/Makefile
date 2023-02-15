@@ -62,7 +62,6 @@ push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
-	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -71,7 +70,6 @@ pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -80,7 +78,6 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 
 run-core:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-core:127.0.0.1" --hostname ${HOSTNAME}-core --name ${HOSTNAME}-core \
@@ -106,6 +103,8 @@ run-ide-clear:
 run-ide: ${PERSISTENT_IDE}
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-ide:127.0.0.1" --hostname ${HOSTNAME}-ide --name ${HOSTNAME}-ide \
 	-v ${PERSISTENT_IDE}/home:/home \
+	-v ${PRJ_DIR}:/home/robot/projects \
+	-v ${PERSISTENT_IDE}/runtime-robot:/tmp/runtime-robot \
 	${OWNER}/${ROS_DISTRO}-enviroment-ide	
 	
 ${PERSISTENT_MR}:
