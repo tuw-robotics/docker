@@ -41,10 +41,18 @@ pull:
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-p3dx-core
 
-run:
+run-twist:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
 	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	
+run-iws:
+	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run --entrypoint /ros_aria_iws.sh -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
+run-bash:
+	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run --entrypoint /bin/bash -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	
 p3dx/tmp/p3dx/src/rosaria:
 	git clone -b master   git@github.com:tuw-robotics/rosaria.git $@
 	
@@ -53,6 +61,7 @@ p3dx/tmp/p3dx/src/tuw_p3dx:
 
 repo-clone: \
 	p3dx/tmp/p3dx/src/rosaria \
+	p3dx/tmp/p3dx/src/tuw_teleop \
 	p3dx/tmp/p3dx/src/tuw_p3dx 
 
 repo-pull:
