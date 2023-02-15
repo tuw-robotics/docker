@@ -32,13 +32,13 @@ build:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
 	
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker push ${OWNER}/${ROS_DISTRO}-p3dx-core
 	
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker pull ${OWNER}/${ROS_DISTRO}-p3dx-core
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
+	@docker rmi -f ${OWNER}/${ROS_DISTRO}-p3dx-core
 
 run:
 	@echo ${OWNER}/${ROS_DISTRO}-${RUN}
