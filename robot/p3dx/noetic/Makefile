@@ -59,10 +59,17 @@ p3dx/tmp/p3dx/src/rosaria:
 p3dx/tmp/p3dx/src/tuw_p3dx:
 	git clone -b master git@github.com:tuw-robotics/tuw_p3dx.git $@
 
+p3dx/tmp/p3dx/src/tuw_teleop:
+	git clone -b master git@github.com:tuw-robotics/tuw_teleop.git $@
+	
+p3dx/tmp/p3dx/src/tuw_msgs:
+	git clone -b master git@github.com:tuw-robotics/tuw_msgs.git $@
+	
 repo-clone: \
 	p3dx/tmp/p3dx/src/rosaria \
-	p3dx/tmp/p3dx/src/tuw_teleop \
-	p3dx/tmp/p3dx/src/tuw_p3dx 
+	p3dx/tmp/p3dx/src/tuw_p3dx \
+	p3dx/tmp/p3dx/src/tuw_msgs  \
+	p3dx/tmp/p3dx/src/tuw_teleop 
 
 repo-pull:
 	find . -type d -name .git -exec echo {} \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;

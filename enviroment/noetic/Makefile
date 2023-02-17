@@ -49,10 +49,7 @@ build-mobile-robotics:
 	
 build-pathfollowing:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing    --build-arg OWNER=${OWNER}/${ROS_DISTRO}                      -f pathfollowing/Dockerfile-pathfollowing    pathfollowing/.
-	
-build-p3dx:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-p3dx             --build-arg OWNER=${OWNER}/${ROS_DISTRO}                      -f p3dx/Dockerfile-p3dx                      p3dx/.
-	
+		
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
@@ -172,20 +169,14 @@ repo-rm:
 	rm -rf bridge/tmp/*
 	rm -rf pathfollowing/tmp/*
 	
-repo-clone:
-	git clone --branch master           git@github.com:tuw-robotics/rosaria.git              p3dx/tmp/p3dx/src/rosaria
-	git clone --branch master           git@github.com:tuw-robotics/tuw_p3dx.git             p3dx/tmp/p3dx/src/tuw_p3dx
-	git clone --branch master           git@github.com:tuw-robotics/tuw_teleop.git           p3dx/tmp/p3dx/src/tuw_teleop
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             p3dx/tmp/p3dx/src/tuw_msgs
-	
+repo-clone:	
 	git clone --branch noetic-devel     git@github.com:ros-simulation/gazebo_ros_pkgs.git    gazebo/tmp/ws00/src/gazebo_ros_pkgs
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             gazebo/tmp/ws00/src/tuw_msgs
-	
-	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
-	
 	git clone --branch noetic-devel     git@github.com:tuw-robotics/tuw_gazebo.git           gazebo/tmp/ws01/src/tuw_gazebo
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         gazebo/tmp/ws01/src/tuw_launches
 
+	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
+	
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             pathfollowing/tmp/ws00/src/tuw_msgs
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git         pathfollowing/tmp/ws00/src/tuw_geometry
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_multi_robot.git      pathfollowing/tmp/ws01/src/tuw_multi_robot
