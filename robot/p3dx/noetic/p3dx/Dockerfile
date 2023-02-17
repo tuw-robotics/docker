@@ -12,11 +12,17 @@ ENV PRJ_DIR=${MY_HOME}/projects/p3dx
 RUN apt-get update && apt-get -y upgrade
 
 # Install locale and set
-RUN apt-get install -y iputils-ping bash-completion ros-noetic-teleop-twist-keyboard libncurses5-dev ros-noetic-joy ros-noetic-joy-teleop
+RUN apt-get install -y iputils-ping bash-completion \
+						libncurses5-dev \
+						ros-noetic-teleop-twist-keyboard \
+						ros-noetic-joy ros-noetic-joy-teleop \
+						ros-noetic-laser-filters \
+						ros-noetic-urg-node \
+						libaria-dev
 
 COPY --chown=${MY_USER}:${MY_USER} ./tmp/p3dx ${PRJ_DIR}
-RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${PRJ_DIR};  rosdep update;  rosdep install -i --from-path src/rosaria --rosdistro noetic -y'
-RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${PRJ_DIR};  rosdep update;  rosdep install -i --from-path src/tuw_p3dx --rosdistro noetic -y'
+# RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${PRJ_DIR};  rosdep update;  rosdep install -i --from-path src/rosaria --rosdistro noetic -y'
+# RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${PRJ_DIR};  rosdep update;  rosdep install -i --from-path src/tuw_p3dx --rosdistro noetic -y'
 # ros-${ROS_DISTRO}-hokuyo-node
 USER ${MY_USER}
 
