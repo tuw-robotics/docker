@@ -1,2 +1,0 @@
-find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +
-find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +
