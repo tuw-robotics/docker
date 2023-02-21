@@ -18,11 +18,13 @@ The containers are pushed to dockerhup
 ```
 make pull ROS_DISTRO=humble
 make pull ROS_DISTRO=noetic
+make pull ROS_DISTRO=melodic
 ```
 ```
 make login USER=tuwrobotics
 make push ROS_DISTRO=humble
 make push ROS_DISTRO=noetic
+make push ROS_DISTRO=melodic
 ```
 
 ## Demo

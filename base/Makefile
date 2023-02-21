@@ -12,13 +12,13 @@ help:
 	@echo ""
 	@echo "   Help Menu"
 	@echo ""
-	@echo "   make build                               - build all images"
-	@echo "   build-humble                             - build our humbe  (ROS2) container"
-	@echo "   build-noetic                             - build our noetic (ROS1) container"
-	@echo "   make login USER=username                 - authenticate container Registry"
-	@echo "   make pull ROS_DISTRO={humble,noetic}     - pull all images exept develop"
-	@echo "   make push ROS_DISTRO={humble,noetic}     - push all images exept develop"
-	@echo "   make run ROS_DISTRO={humble,noetic}      - runs
+	@echo "   make build                                   - build all images"
+	@echo "   build-humble                                 - build our humbe  (ROS2) container"
+	@echo "   build-noetic                                 - build our noetic (ROS1) container"
+	@echo "   make login USER=username                     - authenticate container Registry"
+	@echo "   make pull ROS_DISTRO={humble,noetic,melodic} - pull all images exept develop"
+	@echo "   make push ROS_DISTRO={humble,noetic}         - push all images exept develop"
+	@echo "   make run ROS_DISTRO={humble,noetic}          - runs
 	@echo ""
 
 login:
@@ -50,6 +50,7 @@ build-humble:
 															--build-arg INSTALL_ROS_TOOLS=true \
 															--build-arg INSTALL_ROS1_TOOLS=false \
 															--build-arg INSTALL_ROS2_TOOLS=true \
+															--build-arg INSTALL_ROS_BRIDGE=false \
 															-f ./Dockerfile-base .
 	
 build-noetic: 
@@ -66,8 +67,25 @@ build-noetic:
 															--build-arg INSTALL_ROS_TOOLS=true \
 															--build-arg INSTALL_ROS1_TOOLS=true \
 															--build-arg INSTALL_ROS2_TOOLS=false \
+															--build-arg INSTALL_ROS_BRIDGE=true \
 															-f ./Dockerfile-base .
 
+build-melodic: 
+	@docker build --rm -t ${OWNER}/${PREFIX}-melodic-base \
+															--build-arg ROS_DISTRO=melodic \
+															--build-arg OWNER=osrf \
+															--build-arg BASE_CONTAINER=ros:melodic-desktop \
+													        --build-arg INSTALL_TERMINAL_TOOLS=true \
+													        --build-arg INSTALL_STAGE=true \
+													        --build-arg INSTALL_XFCE=true \
+													        --build-arg INSTALL_VSCODE=false \
+													        --build-arg INSTALL_GAZEBO=false \
+													        --build-arg INSTALL_VNC=false \
+															--build-arg INSTALL_ROS_TOOLS=true \
+															--build-arg INSTALL_ROS1_TOOLS=true \
+															--build-arg INSTALL_ROS2_TOOLS=false \
+															--build-arg INSTALL_ROS_BRIDGE=false \
+															-f ./Dockerfile-base .
 	
 
 run:

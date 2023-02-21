@@ -107,7 +107,7 @@ RUN if [ "$INSTALL_ROS_TOOLS" = "true" ];  then \
 			ros-$ROS_DISTRO-laser-geometry; \
     fi
     
-# install ros tools (ros1 & ros 2)
+# install ros1 tools
 ARG INSTALL_ROS1_TOOLS=true
 RUN if [ "$INSTALL_ROS1_TOOLS" = "true" ];  then \ 
         apt-get install -y ros-$ROS_DISTRO-gmapping \
@@ -115,6 +115,11 @@ RUN if [ "$INSTALL_ROS1_TOOLS" = "true" ];  then \
 			ros-$ROS_DISTRO-map-server  \
 			ros-$ROS_DISTRO-move-base  \
 			ros-$ROS_DISTRO-navigation; \
+    fi
+
+# install ros1 tools
+ARG INSTALL_ROS_BRIDGE=false
+RUN if [ "$INSTALL_ROS_BRIDGE" = "true" ];  then \ 
         echo "deb http://packages.ros.org/ros2/ubuntu focal main" > /etc/apt/sources.list.d/ros2-latest.list; \
         apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654; \
         apt-get update; \
@@ -123,8 +128,8 @@ RUN if [ "$INSTALL_ROS1_TOOLS" = "true" ];  then \
 			ros-galactic-demo-nodes-cpp \
 			ros-galactic-demo-nodes-py; \
     fi
-    
-# install ros navigation pkgs
+        
+# install ros2 tools
 ARG INSTALL_ROS2_TOOLS=true
 RUN if [ "$INSTALL_ROS2_TOOLS" = "true" ];  then \ 
         apt-get install -y --no-install-recommends \
