@@ -79,7 +79,7 @@ ARG INSTALL_XFCE=true
 RUN if [ "$INSTALL_XFCE" = "true" ]; then \ 
         apt-get install -y --no-install-recommends xubuntu-desktop; \
         apt-get remove -y update-manager; \
-        apt-get install -y  x11-xkb-utils geany meld wget dbus-x11; \
+        apt-get install -y  x11-xkb-utils geany meld wget dbus-x11 xauth; \
     fi 
 
 # install VNC
