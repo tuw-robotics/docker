@@ -5,6 +5,7 @@ ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
 RUN = p3dx-core
 SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 PROJECT_DIR = $(shell pwd)
+HOSTNAME := $(shell hostname)
 
 all: help
 
@@ -42,22 +43,32 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-p3dx-core
 
 run-twist:
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run -ti --rm --privileged \
+	--network="host" --env="DISPLAY" \
+	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
+	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 	
 run-iws:
-	@docker run --entrypoint /ros_aria_iws.sh -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	@docker run --entrypoint /ros_aria_iws.sh -ti --rm --privileged \
+	--network="host" --env="DISPLAY" \
+	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
+	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 
-run-bash:
-	@docker run --entrypoint /bin/bash -ti --rm --privileged --network="host" --env="DISPLAY" --add-host "${RUN}:127.0.0.1"  --device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+run-dev:
+	@docker run --entrypoint /bin/bash -ti --rm --privileged \
+	-v ./p3dx/tmp/p3dx/src:/home/robot/projects/p3dx/src \
+	--network="host" --env="DISPLAY" \
+	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
+	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
 	
 attach:
 	docker container exec -it ${RUN} bash
 	
 p3dx/tmp/p3dx/src/rosaria:
-	git clone -b master   git@github.com:tuw-robotics/rosaria.git $@
+	git clone -b devel   git@github.com:tuw-robotics/rosaria.git $@
 	
 p3dx/tmp/p3dx/src/tuw_p3dx:
-	git clone -b devel git@github.com:tuw-robotics/tuw_p3dx.git $@
+	git clone -b master git@github.com:tuw-robotics/tuw_p3dx.git $@
 
 p3dx/tmp/p3dx/src/tuw_teleop:
 	git clone -b master git@github.com:tuw-robotics/tuw_teleop.git $@
@@ -65,10 +76,14 @@ p3dx/tmp/p3dx/src/tuw_teleop:
 p3dx/tmp/p3dx/src/tuw_msgs:
 	git clone -b master git@github.com:tuw-robotics/tuw_msgs.git $@
 	
+p3dx/tmp/p3dx/src/tuw_geometry:
+	git clone -b noetic git@github.com:tuw-robotics/tuw_geometry.git $@
+	
 repo-clone: \
 	p3dx/tmp/p3dx/src/rosaria \
 	p3dx/tmp/p3dx/src/tuw_p3dx \
 	p3dx/tmp/p3dx/src/tuw_msgs  \
+	p3dx/tmp/p3dx/src/tuw_geometry \
 	p3dx/tmp/p3dx/src/tuw_teleop 
 
 repo-pull:
