@@ -12,6 +12,19 @@ For details checkout the Makefile with `make help`
 ## make
 A make file is used to create and run the container
 
+
+## pull / push
+The containers are pushed to dockerhup
+```
+make pull ROS_DISTRO=humble
+make pull ROS_DISTRO=noetic
+```
+```
+make login USER=tuwrobotics
+make push ROS_DISTRO=humble
+make push ROS_DISTRO=noetic
+```
+
 ## Demo
 
 ### non-persistent container

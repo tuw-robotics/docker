@@ -22,17 +22,17 @@ help:
 	@echo ""
 
 login:
-	@docker login -u ${USER}
+	@docker login -u ${USER} 
 
 pull:
-	@docker pull ${OWNER}/${PREFIX}-${ROS_DISTRO}
+	@docker pull ${OWNER}/${PREFIX}-${ROS_DISTRO}-base
 
 push:
-	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}
+	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}-base
 		
 push-taged: guard-NEW_TAG
-	@docker tag ${OWNER}/${PREFIX}-${ROS_DISTRO} ${OWNER}/${PREFIX}-${ROS_DISTRO}:${NEW_TAG}
-	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}:${NEW_TAG}
+	@docker tag ${OWNER}/${PREFIX}-${ROS_DISTRO}-base ${OWNER}/${PREFIX}-${ROS_DISTRO}-base:${NEW_TAG}
+	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}-base:${NEW_TAG}
 	
 build: build-humble build-noetic
 
@@ -53,7 +53,7 @@ build-humble:
 															-f ./Dockerfile-base .
 	
 build-noetic: 
-	@docker build --rm -t ${OWNER}/${PREFIX}-noetic \
+	@docker build --rm -t ${OWNER}/${PREFIX}-noetic-base \
 															--build-arg ROS_DISTRO=noetic \
 															--build-arg OWNER=osrf \
 															--build-arg BASE_CONTAINER=ros:noetic-desktop \
@@ -76,5 +76,5 @@ run:
 	    --hostname ${HOSTNAME}-${ROS_DISTRO} \
 	    --name ${HOSTNAME}-${ROS_DISTRO} \
 		-v /dev/shm:/dev/shm \
-		${OWNER}/${PREFIX}-${ROS_DISTRO}
+		${OWNER}/${PREFIX}-${ROS_DISTRO}-base
 
