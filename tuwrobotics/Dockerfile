@@ -141,6 +141,8 @@ RUN if [ "$INSTALL_ROS2_TOOLS" = "true" ];  then \
 			ros-$ROS_DISTRO-nav2-costmap-2d \
 			ros-$ROS_DISTRO-test-msgs \
 			ros-$ROS_DISTRO-ament-cmake \
+			ros-$ROS_DISTRO-slam-toolbox \
+			ros-$ROS_DISTRO-mouse-teleop \
 			ros-$ROS_DISTRO-gazebo-ros2-control \
 			ros-$ROS_DISTRO-tf-transformations \
 			ros-$ROS_DISTRO-rmw-fastrtps-cpp \
