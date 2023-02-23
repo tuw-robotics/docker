@@ -177,6 +177,7 @@ RUN echo "export PROJECTS_DIR=${PROJECTS_DIR}" >> ~/.bashrc && \
 
 # setup entrypoint
 COPY ./entrypoint.sh /
+COPY ./entrypoint-keep-running.sh /
 COPY ./entrypoint-vnc.sh /
 
 USER ${MY_USER}
@@ -188,13 +189,13 @@ RUN echo "alias tmux2='tmux new -s mpn \; split-window -v \; attach'" >> ~/.bash
 	echo "if [ -f "env.sh" ]; then source env.sh; fi" >> ~/.bashrc
 	    
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ${PROJECTS_DIR}/env.sh && \ 
-	echo "echo "** ROS $ROS_DISTRO initialized **"" >> ${PROJECTS_DIR}/env.sh 
+	echo "echo \"** ROS $ROS_DISTRO initialized **\"" >> ${PROJECTS_DIR}/env.sh 
 
 RUN echo "find -path */.git/config -exec sed -i 's/git@github.com:/https:\/\/github.com\//g' {} +" >> ~/.bash_history && \
     echo "find -path */.git/config -exec sed -i 's/https:\/\/github.com\//git@github.com:/g' {} +" >> ~/.bash_history && \
     echo "cd ${PROJECTS_DIR}" >> ~/.bash_history
 
-COPY --chown=${MY_USER}:${MY_USER} ./base.md ${PROJECTS_DIR}/readme.md
+COPY --chown=${MY_USER}:${MY_USER} ./info.md ${PROJECTS_DIR}/info.md
 
 # setup entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
