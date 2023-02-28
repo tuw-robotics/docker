@@ -1,68 +1,65 @@
 ROS_DISTRO = noetic
-OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
-ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
+OWNER = tuwrobotics
+PREFIX = tuw
+ROOT_CONTAINER = ${OWNER}/${PREFIX}-${ROS_DISTRO}-ide
 
-RUN = p3dx-core
-SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
+PROJECT = p3dx
 PROJECT_DIR = $(shell pwd)
 HOSTNAME := $(shell hostname)
+IMAGE_NAME=${PREFIX}-${ROS_DISTRO}-${PROJECT}
+CONTAINER_NAME=${ROS_DISTRO}-${PROJECT}
+HOSTNAME_NAME=${HOSTNAME}-${PROJECT}
 
 all: help
 
 help:
 	@echo ""
-	@echo "-- Help Menu for ROS ${ROS_DISTRO} based on $$\$${ROOT_CONTAINER}"
+	@echo "-- Help Menu"
 	@echo ""
-	@echo "   global options with defaults:"
-	@echo "     ROS_DISTRO=noetic"
-	@echo "     OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal"
-	@echo "     ROOT_CONTAINER=$$\$${OWNER}/noetic-core"
-	@echo "     RUN=enviroment-core"
-	@echo ""
-	@echo "   make build              - build all images"
+	@echo "   make build              - build the images ${IMAGE_NAME}"
 	@echo "   make login USER=mbader  - authenticate container Registry"
 	@echo "   make pull               - pull all images"
 	@echo "   make push               - push all images"
 	@echo "   make clean              - remove all images"
-	@echo "   make run                - runs the image: $$\$${OWNER}/$$\$${ROS_DISTRO}/$$\$${RUN}"
+	@echo "   make run                - runs the image"
 	@echo ""
 
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
 	
 build:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-p3dx-core  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}   --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" p3dx/.
+	@docker build --rm -t ${OWNER}/${IMAGE_NAME}  --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  p3dx/.
 	
 push:
-	@docker push ${OWNER}/${ROS_DISTRO}-p3dx-core
+	@docker push ${OWNER}/${IMAGE_NAME}
 	
 pull:
-	@docker pull ${OWNER}/${ROS_DISTRO}-p3dx-core
+	@docker pull ${OWNER}/${IMAGE_NAME}
 
 clean:
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-p3dx-core
+	@docker rmi -f ${OWNER}/${IMAGE_NAME}
 
 run-twist:
 	@docker run -ti --rm --privileged \
 	--network="host" --env="DISPLAY" \
-	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
-	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	--add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} \
+	--device=/dev/ttyS0 --name ${CONTAINER_NAME} ${OWNER}/${IMAGE_NAME}
 	
 run-iws:
 	@docker run --entrypoint /ros_aria_iws.sh -ti --rm --privileged \
 	--network="host" --env="DISPLAY" \
-	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
-	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	--add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} \
+	--device=/dev/ttyS0 --name ${CONTAINER_NAME} ${OWNER}/${IMAGE_NAME}
 
 run-dev:
 	@docker run --entrypoint /bin/bash -ti --rm --privileged \
 	-v ./p3dx/tmp/p3dx/src:/home/robot/projects/p3dx/src \
 	--network="host" --env="DISPLAY" \
-	--add-host "${HOSTNAME}-${RUN}:127.0.0.1" --hostname ${HOSTNAME}-${RUN} \
-	--device=/dev/ttyS0 --name ${RUN} ${OWNER}/${ROS_DISTRO}-${RUN}
+	--add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} \
+	--device=/dev/ttyS0 --name ${CONTAINER_NAME} ${OWNER}/${IMAGE_NAME}
 	
 attach:
-	docker container exec -it ${RUN} bash
+	docker container exec -it ${CONTAINER_NAME} bash
 	
 p3dx/tmp/p3dx/src/rosaria:
 	git clone -b devel   git@github.com:tuw-robotics/rosaria.git $@

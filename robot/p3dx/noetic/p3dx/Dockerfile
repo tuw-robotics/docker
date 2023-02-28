@@ -1,8 +1,9 @@
 # enviroment core
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG ROOT_CONTAINER=$OWNER/${ROS_DISTRO}-enviroment-core
+ARG ROS_DISTRO=noetic
+ARG OWNER=tuwrobotics
+ARG ROOT_CONTAINER=$OWNER/tuw-${ROS_DISTRO}-ide
 
 FROM $ROOT_CONTAINER
 USER root
