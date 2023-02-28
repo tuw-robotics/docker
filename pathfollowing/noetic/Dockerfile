@@ -36,15 +36,8 @@ ENV MY_PRJ=${MY_HOME}/projects/ros/pathfollowing/
 RUN mkdir -p ${MY_PRJ}
 
 
-COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws00 ${MY_PRJ}/ws00
-RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; catkin_make'
-
-COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws01 ${MY_PRJ}/ws01
-RUN rm ${MY_PRJ}/ws01/src/tuw_rviz/tuw_control_rviz/CATKIN_IGNORE
-RUN /bin/bash -c '. ${MY_PRJ}/ws00/devel/setup.bash;  cd ${MY_PRJ}/ws01; catkin_make'
-
-COPY --chown=${MY_USER}:${MY_USER} ./tmp/tuw ${MY_PRJ}/tuw
-RUN /bin/bash -c '. ${MY_PRJ}/ws01/devel/setup.bash;  cd ${MY_PRJ}/tuw; catkin_make'
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/src ${MY_PRJ}/src
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}; catkin_make'
 
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
@@ -52,18 +45,15 @@ RUN touch ${MY_PRJ}/env.sh && \
     chmod +x ${MY_PRJ}/env.sh && \ 
     echo 'source /opt/ros/noetic/setup.bash' >> ${MY_PRJ}/env.sh  && \   
     echo 'echo "** ROS /opt/ros/noetic/setup.bash initialized **"' >> ${MY_PRJ}/env.sh  && \   
-    echo 'source $HOME/projects/ros/pathfollowing/ws00/devel/setup.bash' >> ${MY_PRJ}/env.sh  && \  
-    echo 'source $HOME/projects/ros/pathfollowing/ws01/devel/setup.bash' >> ${MY_PRJ}/env.sh  && \  
-    echo 'source $HOME/projects/ros/pathfollowing/tuw/devel/setup.bash'  >> ${MY_PRJ}/env.sh
+    echo 'source $HOME/projects/ros/pathfollowing/devel/setup.bash' >> ${MY_PRJ}/env.sh
 
 
 RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_iws launch_ground_truth_robot_state_publisher:=false' >> ~/.bash_history  && \   
     echo 'export ROS_MASTER_URI=http://ralf:11311/' >> ~/.bash_history && \     
     echo 'export ROS_MASTER_URI=http://r0:11311/' >> ~/.bash_history && \     
-    echo 'source gazebo/env.h' >> ~/.bash_history && \        
     echo 'roslaunch tuw_launches pathfollowing.launch' >> ~/.bash_history && \     
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
-    echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \   
+    echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \  
     echo 'source pathfollowing/env.h' >> ~/.bash_history && \     
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
