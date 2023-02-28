@@ -47,9 +47,6 @@ build-bridge:
 	
 build-mobile-robotics:
 	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics  --build-arg OWNER=${OWNER}/${ROS_DISTRO}                    -f mobile-robotics/Dockerfile-mr             mobile-robotics/.
-	
-build-pathfollowing:
-	@docker build --rm -t ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing    --build-arg OWNER=${OWNER}/${ROS_DISTRO}                      -f pathfollowing/Dockerfile-pathfollowing    pathfollowing/.
 		
 login:
 	@docker login registry.auto.tuwien.ac.at -u ${USER}
@@ -62,7 +59,6 @@ push:
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
-	@docker push ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 	
 pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -70,7 +66,6 @@ pull:
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
-	@docker pull ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 
 clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-core
@@ -78,7 +73,6 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-ide
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-gazebo
-	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 
 run-core:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-core \
@@ -122,10 +116,6 @@ run-mobile-robotics: ${PERSISTENT_MR}
 	-v ${PERSISTENT_MR}/home:/home \
 	${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 	
-run-pathfollowing:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-pathfollowing \
-	${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing	
-	
 	
 run-bridge-stage:
 	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-bridge-stage \
@@ -168,7 +158,6 @@ rm-persistent-data:
 repo-rm:
 	rm -rf gazebo/tmp/*
 	rm -rf bridge/tmp/*
-	rm -rf pathfollowing/tmp/*
 	
 repo-clone:	
 	git clone --branch noetic-devel     git@github.com:ros-simulation/gazebo_ros_pkgs.git    gazebo/tmp/ws00/src/gazebo_ros_pkgs
@@ -178,17 +167,7 @@ repo-clone:
 
 	git clone --branch master           git@github.com:tuw-robotics/stage_ros.git            bridge/tmp/ws00/src/stage_ros
 	
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git             pathfollowing/tmp/ws00/src/tuw_msgs
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git         pathfollowing/tmp/ws00/src/tuw_geometry
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_multi_robot.git      pathfollowing/tmp/ws01/src/tuw_multi_robot
-	git clone --branch master           git@github.com:tuw-robotics/tuw_rviz.git             pathfollowing/tmp/ws01/src/tuw_rviz
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_diffdrive.git        pathfollowing/tmp/ws01/src/tuw_diffdrive
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_control.git          pathfollowing/tmp/ws01/src/tuw_control	
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_global_planner.git   pathfollowing/tmp/ws01/src/tuw_global_planner	
-	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git         pathfollowing/tmp/tuw/src/tuw_launches
-	
 
 repo-update:
 	find ./gazebo/tmp -name .git -exec git --git-dir={} pull \;
 	find ./bridge/tmp -name .git -exec git --git-dir={} pull \;
-	find ./pathfollowing/tmp -name .git -exec git --git-dir={} pull \;

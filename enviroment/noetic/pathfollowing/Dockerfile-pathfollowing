@@ -1,8 +1,9 @@
 # enviroment desktop
 # created by Markus Bader <markus.bader@tuwien.ac.at>
 
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal/noetic
-ARG BASE_CONTAINER=$OWNER-enviroment-gazebo
+ARG ROS_DISTRO=noetic
+ARG OWNER=tuwrobotics
+ARG BASE_CONTAINER=$OWNER/tuw-${ROS_DISTRO}-ide
 FROM $BASE_CONTAINER
 
 USER root
@@ -18,11 +19,17 @@ RUN apt-get install -y \
 	ros-${ROS_DISTRO}-move-base  \
 	ros-${ROS_DISTRO}-navigation  \
 	ros-${ROS_DISTRO}-rviz \
-    ros-${ROS_DISTRO}-laser-filters
+    ros-${ROS_DISTRO}-laser-filters \
+	ros-${ROS_DISTRO}-teleop-twist-keyboard \
+	ros-${ROS_DISTRO}-joy \
+	ros-${ROS_DISTRO}-joy-teleop \
+	ros-${ROS_DISTRO}-urg-node 
     
 RUN apt-get install -y \
     libdxflib-dev \
-    qtbase5-dev
+    libncurses5-dev \
+    qtbase5-dev \
+	libaria-dev
     
 USER ${MY_USER}
 ENV MY_PRJ=${MY_HOME}/projects/ros/pathfollowing/
@@ -51,6 +58,8 @@ RUN touch ${MY_PRJ}/env.sh && \
 
 
 RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_iws launch_ground_truth_robot_state_publisher:=false' >> ~/.bash_history  && \   
+    echo 'export ROS_MASTER_URI=http://ralf:11311/' >> ~/.bash_history && \     
+    echo 'export ROS_MASTER_URI=http://r0:11311/' >> ~/.bash_history && \     
     echo 'source gazebo/env.h' >> ~/.bash_history && \        
     echo 'roslaunch tuw_launches pathfollowing.launch' >> ~/.bash_history && \     
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
@@ -58,7 +67,7 @@ RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_i
     echo 'source pathfollowing/env.h' >> ~/.bash_history && \     
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
-COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/readme.md
+COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/info.md
 USER root
 
 USER ${MY_USER}
