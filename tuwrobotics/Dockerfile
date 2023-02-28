@@ -65,6 +65,7 @@ RUN if [ "$INSTALL_TERMINAL_TOOLS" = "true" ]; then \
             tmux             \
             vim              \
             wget             \
+            iproute2         \
             iputils-ping;    \
     fi 
       
