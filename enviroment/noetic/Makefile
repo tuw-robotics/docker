@@ -7,6 +7,7 @@ PERSISTENT_IDE = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-ide
 PERSISTENT_MR = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 PERSISTENT_GZ  = ${HOME}/tmp/${OWNER}/${ROS_DISTRO}-enviroment-gazebo
 HOSTNAME := $(shell hostname)
+HOSTNAME_NAME=${HOSTNAME}
 	
 
 all: help
@@ -80,15 +81,15 @@ clean:
 	@docker rmi -f ${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing
 
 run-core:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-core:127.0.0.1" --hostname ${HOSTNAME}-core --name ${HOSTNAME}-core \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-core \
 	${OWNER}/${ROS_DISTRO}-enviroment-core
 
 run-bridge:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-bridge:127.0.0.1" --hostname ${HOSTNAME}-bridge --name ${HOSTNAME}-bridge \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-bridge \
 	${OWNER}/${ROS_DISTRO}-enviroment-bridge
 	
 run-desktop:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-desktop:127.0.0.1" --hostname ${HOSTNAME}-desktop --name ${HOSTNAME}-desktop \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-desktop \
 	${OWNER}/${ROS_DISTRO}-enviroment-desktop
 	
 ${PERSISTENT_IDE}:
@@ -101,7 +102,7 @@ run-ide-clear:
 	rm -rf ${PERSISTENT_IDE}
 	
 run-ide: ${PERSISTENT_IDE}
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME}-ide:127.0.0.1" --hostname ${HOSTNAME}-ide --name ${HOSTNAME}-ide \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-ide \
 	-v ${PERSISTENT_IDE}/home:/home \
 	-v ${PRJ_DIR}:/home/robot/projects \
 	-v ${PERSISTENT_IDE}/runtime-robot:/tmp/runtime-robot \
@@ -117,17 +118,17 @@ run-mobile-robotics-clear:
 	rm -rf ${PERSISTENT_MR}
 
 run-mobile-robotics: ${PERSISTENT_MR}
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-mr:127.0.0.1" --hostname ${HOSTNAME}-mr --name ${HOSTNAME}-mr \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-mr \
 	-v ${PERSISTENT_MR}/home:/home \
 	${OWNER}/${ROS_DISTRO}-enviroment-mobile-robotics
 	
 run-pathfollowing:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-pathfollowing:127.0.0.1" --hostname ${HOSTNAME}-pathfollowing --name ${HOSTNAME}-pathfollowing \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-pathfollowing \
 	${OWNER}/${ROS_DISTRO}-enviroment-pathfollowing	
 	
 	
 run-bridge-stage:
-	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-bridge-stage:127.0.0.1" --hostname ${HOSTNAME}-bridge-stage --name ${HOSTNAME}-bridge-stage \
+	@docker run -ti -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-bridge-stage \
 		-v /dev/shm:/dev/shm \
 	${OWNER}/${ROS_DISTRO}-enviroment-bridge-stage	
 	
@@ -143,7 +144,7 @@ ${PERSISTENT_GZ}:
 	
 # runs the gazebo container
 run-gz: ${PERSISTENT_GZ}
-	@docker run -ti  -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-gazebo:127.0.0.1" --hostname ${HOSTNAME}-gazebo --name ${HOSTNAME}-gazebo \
+	@docker run -ti  -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-gazebo \
 		-v ${HOME}/.sdformat:/home/robot/.sdformat \
 		-v ${HOME}/.ignition:/home/robot/.ignition \
 		-v ${HOME}/.gazebo:/home/robot/.gazebo \
@@ -152,7 +153,7 @@ run-gz: ${PERSISTENT_GZ}
 	${OWNER}/${ROS_DISTRO}-enviroment-gazebo	
 	
 run-gz-dev: ${PERSISTENT_GZ}
-	@docker run -ti  -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME}-gazebo:127.0.0.1" --hostname ${HOSTNAME}-gazebo --name ${HOSTNAME}-gazebo \
+	@docker run -ti  -e "TERM=xterm-256color" --rm --privileged --network="host" --env="DISPLAY" --add-host "${HOSTNAME_NAME}:127.0.0.1" --hostname ${HOSTNAME_NAME} --name ${HOSTNAME}-gazebo \
 		-v ${PERSISTENT_GZ}/home:/home \
 		-v ${HOME}/.gitconfig:/home/robot/.gitconfig:ro \
 		-v ${HOME}/.ssh:/home/robot/.ssh:ro \
