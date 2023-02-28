@@ -28,7 +28,7 @@ help:
 login:
 	@docker login -u ${USER} 
 
-pull: push-humble push-noetic push-melodic
+pull: pull-humble pull-noetic pull-melodic
 
 push: push-humble push-noetic push-melodic
 		
