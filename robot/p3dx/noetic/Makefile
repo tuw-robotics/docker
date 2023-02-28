@@ -52,10 +52,10 @@ run-iws:
 	--device=/dev/ttyS0 --name ${CONTAINER_HOSTNAME} ${OWNER}/${IMAGE_NAME}
 
 run-dev:
-	@docker run --entrypoint /bin/bash -ti --rm --privileged \
+	docker run --entrypoint /bin/bash -ti --rm --privileged \
 	-v ./p3dx/tmp/p3dx/src:/home/robot/projects/p3dx/src \
 	--network="host" --env="DISPLAY" \
-	--add-host "${CONTAINER_HOSTNAME}:127.0.0.1" --hostname ${CONTAINER_HOSTNAME} \
+	--add-host "${CONTAINER_HOSTNAME}:127.0.0.1" --add-host "r0:10.76.11.50" --hostname ${CONTAINER_HOSTNAME} \
 	--device=/dev/ttyS0 --name ${CONTAINER_HOSTNAME} ${OWNER}/${IMAGE_NAME}
 	
 attach:

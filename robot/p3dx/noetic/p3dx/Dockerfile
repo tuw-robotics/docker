@@ -36,7 +36,8 @@ RUN touch ${PRJ_DIR}/env.sh && \
     
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${PRJ_DIR}; pwd; catkin_make'
 RUN echo 'source ${PRJ_DIR}/devel/setup.bash' >> ~/.bashrc
-RUN echo 'roslaunch tuw_launches robot_description.launch'  >> ~/.bash_history  && \   
+RUN echo 'export ROS_MASTER_URI=http://r0:11311/' >> ~/.bash_history && \     
+    echo 'roslaunch tuw_launches robot_description.launch'  >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_hokuyo.launch'  >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_filter.launch'  >> ~/.bash_history  && \   
     echo 'roslaunch tuw_p3dx aria_twist.launch'  >> ~/.bash_history  && \   
