@@ -29,7 +29,7 @@ RUN apt-get install -y \
     libdxflib-dev \
     libncurses5-dev \
     qtbase5-dev \
-	libaria-dev
+    libaria-dev
     
 USER ${MY_USER}
 ENV MY_PRJ=${MY_HOME}/projects/ros/pathfollowing/
@@ -54,6 +54,7 @@ RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_i
     echo 'roslaunch tuw_launches pathfollowing.launch' >> ~/.bash_history && \     
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \  
+    echo 'roslaunch tuw_launches robot_description.launch' >> ~/.bash_history  && \  
     echo 'source pathfollowing/env.h' >> ~/.bash_history && \     
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
