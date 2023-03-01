@@ -48,45 +48,45 @@ run:
 attach:
 	docker container exec -it ${CONTAINER_NAME} bash
 	
-tmp/src/tuw_msgs:
+tmp/ws/src/tuw_msgs:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git $@
 
-tmp/src/tuw_geometry:
+tmp/ws/src/tuw_geometry:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git $@
 
-tmp/src/tuw_control:
+tmp/ws/src/tuw_control:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_control.git $@
 	
-tmp/src/tuw_gazebo:
+tmp/ws/src/tuw_gazebo:
 	git clone -b noetic-devel           git@github.com:tuw-robotics/tuw_gazebo.git $@
 	
-tmp/src/tuw_multi_robot:
+tmp/ws/src/tuw_multi_robot:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_multi_robot.git $@
 
-tmp/src/tuw_rviz:
+tmp/ws/src/tuw_rviz:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_rviz.git $@
-	rm tmp/src/tuw_rviz/tuw_control_rviz/CATKIN_IGNORE
+	rm $@/tuw_control_rviz/CATKIN_IGNORE
 
-tmp/src/tuw_diffdrive:
+tmp/ws/src/tuw_diffdrive:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_diffdrive.git $@
 
-tmp/src/tuw_global_planner:
+tmp/ws/src/tuw_global_planner:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_global_planner.git $@
 
-tmp/src/tuw_launches:
+tmp/ws/src/tuw_launches:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git $@
 
 	
 repo-clone: \
-	tmp/src/tuw_msgs \
-	tmp/src/tuw_geometry \
-	tmp/src/tuw_gazebo \
-	tmp/src/tuw_control \
-	tmp/src/tuw_multi_robot  \
-	tmp/src/tuw_rviz \
-	tmp/src/tuw_diffdrive \
-	tmp/src/tuw_global_planner \
-	tmp/src/tuw_launches
+	tmp/ws/src/tuw_msgs \
+	tmp/ws/src/tuw_geometry \
+	tmp/ws/src/tuw_gazebo \
+	tmp/ws/src/tuw_control \
+	tmp/ws/src/tuw_multi_robot  \
+	tmp/ws/src/tuw_rviz \
+	tmp/ws/src/tuw_diffdrive \
+	tmp/ws/src/tuw_global_planner \
+	tmp/ws/src/tuw_launches
 
 repo-pull:
 	find . -type d -name .git -exec echo {} \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;

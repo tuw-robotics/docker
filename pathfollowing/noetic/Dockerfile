@@ -36,7 +36,7 @@ ENV MY_PRJ=${MY_HOME}/projects/ros/pathfollowing/
 RUN mkdir -p ${MY_PRJ}
 
 
-COPY --chown=${MY_USER}:${MY_USER} ./tmp/src ${MY_PRJ}/src
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws/src ${MY_PRJ}/src
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}; catkin_make'
 
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc

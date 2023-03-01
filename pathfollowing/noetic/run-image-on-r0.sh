@@ -11,9 +11,7 @@ CONTAINER_HOSTNAME=${HOSTNAME}-${PROJECT}
 
 
 docker run --entrypoint /bin/bash -ti --rm --privileged \
-	-v ./tmp/ws00/src:/home/robot/projects/ros/pathfollowing/ws00/src \
-	-v ./tmp/ws01/src:/home/robot/projects/ros/pathfollowing/ws01/src \
-	-v ./tmp/tuw/src:/home/robot/projects/ros/pathfollowing/tuw/src \
+	-v ./tmp/ws:/home/robot/projects/ros/pathfollowing \
 	--network="host" --env="DISPLAY" \
 	--add-host "${CONTAINER_HOSTNAME}:127.0.0.1" \
 	--add-host "r0:10.76.11.50" \
