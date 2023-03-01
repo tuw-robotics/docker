@@ -42,7 +42,7 @@ RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}; catkin_mak
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
 RUN touch ${MY_PRJ}/env.sh && \  
-    chmod +x ${MY_PRJ}/env.sh && \ 
+    chmod +x ${MY_PRJ}/env.sh && \
     echo 'source /opt/ros/noetic/setup.bash' >> ${MY_PRJ}/env.sh  && \   
     echo 'echo "** ROS /opt/ros/noetic/setup.bash initialized **"' >> ${MY_PRJ}/env.sh  && \   
     echo 'source $HOME/projects/ros/pathfollowing/devel/setup.bash' >> ${MY_PRJ}/env.sh
@@ -55,7 +55,6 @@ RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_i
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \  
     echo 'roslaunch tuw_launches robot_description.launch' >> ~/.bash_history  && \  
-    echo 'source pathfollowing/env.h' >> ~/.bash_history && \     
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/info.md
