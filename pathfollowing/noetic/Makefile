@@ -76,8 +76,11 @@ tmp/ws/src/tuw_global_planner:
 tmp/ws/src/tuw_launches:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git $@
 
+tmp/ws/src/rosaria:
+	git clone -b devel                  git@github.com:tuw-robotics/rosaria.git $@
 	
 repo-clone: \
+	tmp/ws/src/rosaria \
 	tmp/ws/src/tuw_msgs \
 	tmp/ws/src/tuw_geometry \
 	tmp/ws/src/tuw_gazebo \
