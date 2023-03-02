@@ -7,7 +7,7 @@ PROJECT=pathfollowing
 HOSTNAME=$(hostname)
 IMAGE_NAME=${PREFIX}-${ROS_DISTRO}-${PROJECT}
 CONTAINER_NAME=${ROS_DISTRO}-${PROJECT}
-CONTAINER_HOSTNAME=${HOSTNAME}-${PROJECT}
+CONTAINER_HOSTNAME=${HOSTNAME}
 
 
 docker run --entrypoint /bin/bash -ti --rm --privileged \
