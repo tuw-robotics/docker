@@ -51,10 +51,12 @@ RUN touch ${MY_PRJ}/env.sh && \
 RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_iws launch_ground_truth_robot_state_publisher:=false' >> ~/.bash_history  && \   
     echo 'export ROS_MASTER_URI=http://ralf:11311/' >> ~/.bash_history && \     
     echo 'export ROS_MASTER_URI=http://r0:11311/' >> ~/.bash_history && \     
+    echo 'roslaunch tuw_launches pioneer_iws.launch' >> ~/.bash_history && \    
     echo 'roslaunch tuw_launches pathfollowing.launch' >> ~/.bash_history && \     
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \  
     echo 'roslaunch tuw_launches robot_description.launch' >> ~/.bash_history  && \  
+    echo 'rm -rf ~/projects/ros/pathfollowing/src/tuw_launches/cfg/graph/roblab/cache/*'
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/info.md

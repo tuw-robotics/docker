@@ -46,7 +46,7 @@ run:
 	--device=/dev/ttyS0 --name ${CONTAINER_HOSTNAME} ${OWNER}/${IMAGE_NAME}
 	
 attach:
-	docker container exec -it ${CONTAINER_NAME} bash
+	docker container exec -it ${CONTAINER_HOSTNAME} bash
 	
 tmp/ws/src/tuw_msgs:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git $@
