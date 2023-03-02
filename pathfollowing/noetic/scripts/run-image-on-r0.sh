@@ -18,4 +18,5 @@ docker run --entrypoint /bin/bash -ti --rm --privileged \
 	--add-host "ralf:10.76.11.80" \
 	--hostname ${CONTAINER_HOSTNAME} \
 	--device=/dev/ttyS0 \
+	--device=/dev/input/js0 \
 	--name ${CONTAINER_HOSTNAME} ${OWNER}/${IMAGE_NAME}
