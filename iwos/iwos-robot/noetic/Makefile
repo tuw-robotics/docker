@@ -1,8 +1,9 @@
 ROS_DISTRO = noetic
-OWNER = registry.auto.tuwien.ac.at/roblab/docker/focal
-ROOT_CONTAINER = ${OWNER}/${ROS_DISTRO}-enviroment-core
-THIS_CONTAINER = ${OWNER}/${ROS_DISTRO}-iwos-robot
-THIS_RUN = ${ROS_DISTRO}-iwos-robot
+ROOT_CONTAINER_OWNER = tuwrobotics
+ROOT_CONTAINER = ${ROOT_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-ide
+THIS_CONTAINER_OWNER = ekrobotics
+THIS_CONTAINER = ${THIS_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-iwos-robot
+THIS_RUN = tuw-${ROS_DISTRO}-iwos-robot
 
 SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 
@@ -14,9 +15,10 @@ help:
 	@echo ""
 	@echo "   global options with defaults:"
 	@echo "     ROS_DISTRO=${ROS_DISTRO}"
-	@echo "     OWNER=${OWNER}"
+	@echo "     ROOT_CONTAINER_OWNER=${ROOT_CONTAINER_OWNER}"
 	@echo "     ROOT_CONTAINER=${ROOT_CONTAINER}"
-	@echo "     RUN=${RUN}"
+	@echo "     THIS_CONTAINER_OWNER=${THIS_CONTAINER_OWNER}"
+	@echo "     THIS_CONTAINER=${THIS_CONTAINER}"
 	@echo ""
 	@echo "   make login						- authenticate container Registry"
 	@echo "   make build      			- build the image"
@@ -29,7 +31,7 @@ help:
 	@echo ""
 
 login:
-	@docker login registry.auto.tuwien.ac.at -u ${ROBLAB_USER}
+	@docker login -u ${THIS_CONTAINER_OWNER}
 
 build:
 	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
@@ -50,7 +52,7 @@ clean:
 	@docker rmi -f ${THIS_CONTAINER}
 
 run:
-	@docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
+	@docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
 
 echo_run:
-	@echo "docker run -ti --rm --privileged --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/ttyUSB0 --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}"
+	@echo "docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}"
