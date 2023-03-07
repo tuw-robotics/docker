@@ -1,6 +1,6 @@
-
-ARG OWNER=registry.auto.tuwien.ac.at/roblab/docker/focal
-ARG ROOT_CONTAINER=$OWNER/${ROS_DISTRO}-enviroment-core
+ARG ROS_DISTRO=noetic
+ARG OWNER=tuwrobotics
+ARG ROOT_CONTAINER=$OWNER/tuw-${ROS_DISTRO}-ide
 
 FROM ubuntu as intermediate
 
@@ -18,12 +18,13 @@ RUN chmod 600 /root/.ssh/id_rsa
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-RUN git clone --branch master git@github.com:tuw-robotics/tuw_geometry.git         catkin_ws/src/tuw_geometry
 RUN git clone --branch noetic git@github.com:tuw-robotics/tuw_msgs.git             catkin_ws/src/tuw_msgs
-RUN git clone --branch devel-python git@github.com:tuw-robotics/tuw_teleop.git     catkin_ws/src/tuw_teleop
+RUN git clone --branch master git@github.com:tuw-robotics/tuw_geometry.git         catkin_ws/src/tuw_geometry
+RUN git clone --branch devel git@github.com:tuw-robotics/tuw_teleop.git           catkin_ws/src/tuw_teleop
 
-RUN git clone --branch devel git@github.com:ek-robotics/tuw_iwos.git               catkin_ws/src/tuw_iwos
 RUN git clone --branch devel git@github.com:ek-robotics/tuw_hardware_interface.git catkin_ws/src/tuw_hardware_interface
+RUN git clone --branch devel git@github.com:ek-robotics/tuw_iwos.git               catkin_ws/src/tuw_iwos
+RUN git clone --branch devel git@github.com:ek-robotics/tuw_sensor.git             catkin_ws/src/tuw_sensor
 
 FROM $ROOT_CONTAINER
 USER root
@@ -45,6 +46,10 @@ USER ${MY_USER}
 RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash; cd ${PROJECT_DIR}; catkin_make'
 RUN echo 'source ${PROJECT_DIR}/devel/setup.bash' >> ~/.bashrc
 RUN echo 'alias hints="glow ~/entrypoint.md"' >> ~/.bashrc
+RUN echo 'alias e="exit"' >> ~/.bashrc
+RUN echo 'alias c="clear"' >> ~/.bashrc
+RUN echo 'roslaunch tuw_iwos_launches robot.launch gamepad:=true' >> ~/.bash_history
+RUN echo 'tmux new-session \; split-window -h \; split-window -v \; attach \;' >> ~/.bash_history
 
 COPY --chown=${MY_USER}:${MY_USER} ./entrypoint.md ${MY_HOME}/entrypoint.md
 
