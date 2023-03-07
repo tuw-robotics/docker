@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ROS_DISTRO=noetic
 OWNER=tuwrobotics
 PREFIX=tuw
@@ -7,7 +8,7 @@ PROJECT=ide
 HOSTNAME=$(hostname)
 IMAGE_NAME=${PREFIX}-${ROS_DISTRO}-${PROJECT}
 CONTAINER_NAME=${ROS_DISTRO}-${PROJECT}
-CONTAINER_HOSTNAME=${HOSTNAME}-${PROJECT}
+CONTAINER_HOSTNAME=${IMAGE_NAME}
 
 
 docker run --entrypoint /bin/bash -ti --rm --privileged \
