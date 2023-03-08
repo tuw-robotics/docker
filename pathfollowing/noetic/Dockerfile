@@ -36,8 +36,14 @@ ENV MY_PRJ=${MY_HOME}/projects/ros/pathfollowing/
 RUN mkdir -p ${MY_PRJ}
 
 
-COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws/src ${MY_PRJ}/src
-RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}; catkin_make'
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws/ws00/src ${MY_PRJ}/ws00/src
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  cd ${MY_PRJ}/ws00; catkin_make'
+
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws/ws01/src ${MY_PRJ}/ws01/src
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  source ${MY_PRJ}/ws00/devel/setup.bash; cd ${MY_PRJ}/ws01; catkin_make'
+
+COPY --chown=${MY_USER}:${MY_USER} ./tmp/ws/ws02/src ${MY_PRJ}/ws02/src
+RUN /bin/bash -c '. /opt/ros/${ROS_DISTRO}/setup.bash;  source ${MY_PRJ}/ws00/devel/setup.bash;  source ${MY_PRJ}/ws01/devel/setup.bash; cd ${MY_PRJ}/ws02; catkin_make'
 
 RUN echo 'if [ -f "env.sh" ]; then\n source env.sh \nelse\n echo "no env.sh to source" \nfi' >> ~/.bashrc
 
@@ -45,7 +51,9 @@ RUN touch ${MY_PRJ}/env.sh && \
     chmod +x ${MY_PRJ}/env.sh && \
     echo 'source /opt/ros/noetic/setup.bash' >> ${MY_PRJ}/env.sh  && \   
     echo 'echo "** ROS /opt/ros/noetic/setup.bash initialized **"' >> ${MY_PRJ}/env.sh  && \   
-    echo 'source $HOME/projects/ros/pathfollowing/devel/setup.bash' >> ${MY_PRJ}/env.sh
+    echo 'source $HOME/projects/ros/pathfollowing/ws00/devel/setup.bash' >> ${MY_PRJ}/env.sh && \   
+    echo 'source $HOME/projects/ros/pathfollowing/ws01/devel/setup.bash' >> ${MY_PRJ}/env.sh && \   
+    echo 'source $HOME/projects/ros/pathfollowing/ws02/devel/setup.bash' >> ${MY_PRJ}/env.sh
 
 
 RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_iws launch_ground_truth_robot_state_publisher:=false' >> ~/.bash_history  && \   
@@ -56,7 +64,7 @@ RUN echo 'roslaunch tuw_gazebo_models robot_in_world.launch motor_plugin:=diff_i
     echo 'roslaunch tuw_launches rviz_pathfollowing.launch' >> ~/.bash_history  && \   
     echo 'roslaunch tuw_launches laser_filter.launch robot_name:=r0' >> ~/.bash_history  && \  
     echo 'roslaunch tuw_launches robot_description.launch' >> ~/.bash_history  && \  
-    echo 'rm -rf ~/projects/ros/pathfollowing/src/tuw_launches/cfg/graph/roblab/cache/*' && \
+    echo 'rm -rf ~/projects/ros/pathfollowing/ws02/src/tuw_launches/cfg/graph/roblab/cache/*' && \
     echo 'tmux new -s pathfollowing \; split-window -v \; select-pane -t 1 \; split-window -v \; select-pane -t 0 \; attach' >> ~/.bash_history
 
 COPY --chown=${MY_USER}:${MY_USER} ./pathfollowing.md ${MY_PRJ}/info.md
