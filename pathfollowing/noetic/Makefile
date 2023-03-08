@@ -48,48 +48,48 @@ run:
 attach:
 	docker container exec -it ${CONTAINER_HOSTNAME} bash
 	
-tmp/ws/src/tuw_msgs:
+tmp/ws/ws00/src/tuw_msgs:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_msgs.git $@
 
-tmp/ws/src/tuw_geometry:
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git $@
-
-tmp/ws/src/tuw_control:
-	git clone --branch noetic           git@github.com:tuw-robotics/tuw_control.git $@
-	
-tmp/ws/src/tuw_gazebo:
+tmp/ws/ws00/src/tuw_gazebo:
 	git clone -b noetic-devel           git@github.com:tuw-robotics/tuw_gazebo.git $@
 	
-tmp/ws/src/tuw_multi_robot:
+tmp/ws/ws00/src/rosaria:
+	git clone -b devel                  git@github.com:tuw-robotics/rosaria.git $@
+	
+tmp/ws/ws00/src/tuw_geometry:
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_geometry.git $@
+
+tmp/ws/ws01/src/tuw_control:
+	git clone --branch noetic           git@github.com:tuw-robotics/tuw_control.git $@
+	
+tmp/ws/ws01/src/tuw_multi_robot:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_multi_robot.git $@
 
-tmp/ws/src/tuw_rviz:
+tmp/ws/ws01/src/tuw_rviz:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_rviz.git $@
 	rm $@/tuw_control_rviz/CATKIN_IGNORE
 
-tmp/ws/src/tuw_diffdrive:
+tmp/ws/ws01/src/tuw_diffdrive:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_diffdrive.git $@
 
-tmp/ws/src/tuw_global_planner:
+tmp/ws/ws01/src/tuw_global_planner:
 	git clone --branch noetic           git@github.com:tuw-robotics/tuw_global_planner.git $@
 
-tmp/ws/src/tuw_launches:
+tmp/ws/ws02/src/tuw_launches:
 	git clone --branch master           git@github.com:tuw-robotics/tuw_launches.git $@
-
-tmp/ws/src/rosaria:
-	git clone -b devel                  git@github.com:tuw-robotics/rosaria.git $@
 	
 repo-clone: \
-	tmp/ws/src/rosaria \
-	tmp/ws/src/tuw_msgs \
-	tmp/ws/src/tuw_geometry \
-	tmp/ws/src/tuw_gazebo \
-	tmp/ws/src/tuw_control \
-	tmp/ws/src/tuw_multi_robot  \
-	tmp/ws/src/tuw_rviz \
-	tmp/ws/src/tuw_diffdrive \
-	tmp/ws/src/tuw_global_planner \
-	tmp/ws/src/tuw_launches
+	tmp/ws/ws00/src/tuw_msgs \
+	tmp/ws/ws00/src/tuw_gazebo \
+	tmp/ws/ws00/src/rosaria \
+	tmp/ws/ws00/src/tuw_geometry \
+	tmp/ws/ws01/src/tuw_control \
+	tmp/ws/ws01/src/tuw_multi_robot  \
+	tmp/ws/ws01/src/tuw_rviz \
+	tmp/ws/ws01/src/tuw_diffdrive \
+	tmp/ws/ws01/src/tuw_global_planner \
+	tmp/ws/ws02/src/tuw_launches
 
 repo-pull:
 	find . -type d -name .git -exec echo {} \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;
