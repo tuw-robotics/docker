@@ -66,6 +66,7 @@ RUN if [ "$INSTALL_TERMINAL_TOOLS" = "true" ]; then \
             vim              \
             wget             \
             iproute2         \
+            libncurses-dev   \
             iputils-ping;    \
     fi 
       
@@ -115,6 +116,7 @@ RUN if [ "$INSTALL_ROS1_TOOLS" = "true" ];  then \
 			ros-$ROS_DISTRO-amcl  \
 			ros-$ROS_DISTRO-map-server  \
 			ros-$ROS_DISTRO-move-base  \
+			ros-$ROS_DISTRO-stage \
 			ros-$ROS_DISTRO-navigation; \
     fi
 
