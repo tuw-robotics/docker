@@ -28,7 +28,7 @@ USER ${MY_USER}
 
 RUN echo 'source ${PROJECT_DIR}/ws00/devel/setup.bash' >> ~/.bashrc
 RUN echo 'source ${PROJECT_DIR}/ws01/devel/setup.bash' >> ~/.bashrc
-RUN echo 'alias hints="glow ~/entrypoint.md"' >> ~/.bashrc
+RUN echo 'alias hints="glow ~/info.md"' >> ~/.bashrc
 RUN echo 'alias e="exit"' >> ~/.bashrc
 RUN echo 'alias c="clear"' >> ~/.bashrc
 RUN echo 'roslaunch tuw_iwos_launches robot.launch gamepad:=true' >> ~/.bash_history
@@ -40,6 +40,5 @@ RUN rm -rf ${MY_HOME}/.ros
 USER ${MY_USER}
 WORKDIR ${MY_HOME}
 ENV HOME=${MY_HOME}
-COPY --chown=${MY_USER}:${MY_USER} entrypoint.md ${MY_HOME}/entrypoint.md
-ENTRYPOINT ["/entrypoint.sh"]
+COPY --chown=${MY_USER}:${MY_USER} info.md ${MY_HOME}/info.md
 CMD /bin/bash

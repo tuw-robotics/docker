@@ -61,8 +61,8 @@ run:
 clean:
 	@docker rmi -f ${THIS_CONTAINER}
 
-echo_docker_pull:
+print_docker_pull:
 	@echo "docker pull ${THIS_CONTAINER}"
 
-echo_run:
+print_run:
 	@echo "docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}"
