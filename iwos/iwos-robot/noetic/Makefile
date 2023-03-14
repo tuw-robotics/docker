@@ -50,7 +50,7 @@ docker_push:
 docker_pull:
 	@docker pull ${THIS_CONTAINER}
 
-echo_dcker_pull:
+echo_docker_pull:
 	@echo "docker pull ${THIS_CONTAINER}"
 
 clean:
