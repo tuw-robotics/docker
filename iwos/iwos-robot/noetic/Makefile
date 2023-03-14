@@ -5,7 +5,9 @@ THIS_CONTAINER_OWNER = ekrobotics
 THIS_CONTAINER = ${THIS_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-iwos-robot
 THIS_RUN = tuw-${ROS_DISTRO}-iwos-robot
 
-SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
+PROJECT_DIR = $(shell pwd)
+
+#SSH_PRIVATE_KEY=`cat ~/.ssh/docker/id_rsa`
 
 all: help
 
@@ -34,18 +36,21 @@ login:
 	@docker login -u ${THIS_CONTAINER_OWNER}
 
 build:
-	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/.
+	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" .
 
 build_no_cache:
-	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" core/. --no-cache
+	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" . --no-cache
 
-push:
+git_pull:
+	find . -type d -name .git -exec echo {} \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{} pull origin \;
+
+docker_push:
 	@docker push ${THIS_CONTAINER}
 
-pull:
+docker_pull:
 	@docker pull ${THIS_CONTAINER}
 
-echo_pull:
+echo_dcker_pull:
 	@echo "docker pull ${THIS_CONTAINER}"
 
 clean:
