@@ -47,7 +47,7 @@ git_clone:
 	@cd ./source/$(ws)/src && git clone --branch $(branch) $(repo) && cd ${PROJECT_DIR}
 
 git_pull:
-	@find . -type d -name .git -exec echo -n '{} - ' \; -exec git --git-dir=${PROJECT_DIR}/{} branch --show-current \; -exec git --git-dir=${PROJECT_DIR}/{} pull origin \;
+	@find . -type d -name .git -exec echo -n '{} - ' \; -exec git --git-dir=${PROJECT_DIR}/{} branch --show-current \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;
 
 build:
 	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" .
