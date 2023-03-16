@@ -28,11 +28,11 @@ USER ${MY_USER}
 
 RUN echo 'source ${PROJECT_DIR}/ws00/devel/setup.bash' >> ~/.bashrc
 RUN echo 'source ${PROJECT_DIR}/ws01/devel/setup.bash' >> ~/.bashrc
-RUN echo 'alias hints="glow ~/info.md"' >> ~/.bashrc
 RUN echo 'alias e="exit"' >> ~/.bashrc
 RUN echo 'alias c="clear"' >> ~/.bashrc
-RUN echo 'roslaunch tuw_iwos_launches robot.launch gamepad:=true' >> ~/.bash_history
+RUN echo 'alias help="glow ~/info.md"' >> ~/.bashrc
 RUN echo 'tmux new-session \; split-window -h \; split-window -v \; attach \;' >> ~/.bash_history
+RUN echo 'roslaunch tuw_iwos_launches robot.launch rviz:=false' >> ~/.bash_history
 
 USER root
 RUN rm -rf ${MY_HOME}/.ros
