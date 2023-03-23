@@ -1,10 +1,12 @@
 OWNER = tuwrobotics
+OWNER-ALAB = registry.auto.tuwien.ac.at/mr/mr_root
 PREFIX = tuw
 
 PROJECT_DIR = $(shell cd ..; pwd)
 HOSTNAME := $(shell hostname)
 TAG = latest 
 ROS_DISTRO = humble
+PWD = password
 	
 all: help
 
@@ -13,9 +15,10 @@ help:
 	@echo "   Help Menu"
 	@echo ""
 	@echo "   make build                    - build all images"
-	@echo "   build-humble                  - build our humbe  images"
-	@echo "   build-noetic                  - build our noetic images"
-	@echo "   build-melodic                 - build our noetic images"
+	@echo "   build-humble                  - build humble  images"
+	@echo "   build-humble-alab PWD=xyz     - build humble lab images"
+	@echo "   build-noetic                  - build noetic images"
+	@echo "   build-melodic                 - build melodic images"
 	@echo "   make login USER=username      - login container registry"
 	@echo "   make pull ROS_DISTRO={distro} - pull image"
 	@echo "   make push ROS_DISTRO={distro} - push image"
@@ -25,6 +28,9 @@ help:
 	@echo "    	        default: humble"
 	@echo ""
 
+login-alab:
+	@docker login registry.auto.tuwien.ac.at -u $(USER)
+	
 login:
 	@docker login -u ${USER} 
 
@@ -36,7 +42,7 @@ push-taged: guard-NEW_TAG
 	@docker tag ${OWNER}/${PREFIX}-${ROS_DISTRO}-ide ${OWNER}/${PREFIX}-${ROS_DISTRO}-ide:${NEW_TAG}
 	@docker push ${OWNER}/${PREFIX}-${ROS_DISTRO}-ide:${NEW_TAG}
 	
-build: build-humble build-noetic build-melodic
+build: build-humble build-noetic build-melodic build-humble-alab
 
 build-humble: 
 	@docker build --rm -t ${OWNER}/${PREFIX}-humble-ide \
@@ -60,6 +66,36 @@ push-humble:
 	
 pull-humble:
 	@docker pull ${OWNER}/${PREFIX}-humble-ide
+	
+build-humble-alab: 
+	@docker build --rm -t ${OWNER-ALAB}/${PREFIX}-humble-ide \
+				--build-arg ROS_DISTRO=humble \
+				--build-arg OWNER=osrf \
+				--build-arg BASE_CONTAINER=ros:humble-desktop \
+				--build-arg MY_USER=robot \
+				--build-arg MY_PASSWORD=${PWD} \
+				--build-arg MY_UID=1100 \
+				--build-arg MY_GID=1100 \
+				--build-arg HOME_DIR=/local/home \
+				--build-arg PROJECTS_DIR=/local/home/robot/projects \
+				--build-arg INSTALL_TERMINAL_TOOLS=true \
+				--build-arg INSTALL_STAGE=true \
+				--build-arg INSTALL_XFCE=true \
+				--build-arg INSTALL_VSCODE=true \
+				--build-arg INSTALL_GAZEBO=true \
+				--build-arg INSTALL_VNC=true \
+				--build-arg INSTALL_ROS_TOOLS=true \
+				--build-arg INSTALL_ROS1_TOOLS=false \
+				--build-arg INSTALL_ROS2_TOOLS=true \
+				--build-arg INSTALL_ROS_BRIDGE=false \
+				-f ./Dockerfile .
+
+push-humble-alab:
+	@docker push ${OWNER-ALAB}/${PREFIX}-humble-ide
+	
+pull-humble-alab:
+	@docker pull ${OWNER-ALAB}/${PREFIX}-humble-ide
+	
 	
 build-noetic: 
 	@docker build --rm -t ${OWNER}/${PREFIX}-noetic-ide \

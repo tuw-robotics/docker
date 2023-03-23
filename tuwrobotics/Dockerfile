@@ -14,7 +14,7 @@ ARG TZ=Europe/Vienna
 ENV MY_USER=${MY_USER}
 ENV MY_HOME=/home/${MY_USER}
 
-ARG PROJECTS_DIR=/opt/projects
+ARG PROJECTS_DIR=${MY_HOME}/projects
 ENV PROJECTS_DIR=${PROJECTS_DIR}
 
 ENV CONFIG_DIR=./config
@@ -23,7 +23,7 @@ ENV INSTALL_DIR=/install
 
 USER root
 
-RUN apt-get update && apt-get -y upgrade
+RUN apt update && apt -y upgrade
 
 # Install locale and set
 ENV DEBIAN_FRONTEND noninteractive
@@ -67,6 +67,7 @@ RUN if [ "$INSTALL_TERMINAL_TOOLS" = "true" ]; then \
             wget             \
             iproute2         \
             libncurses-dev   \
+            tmuxinator       \
             iputils-ping;    \
     fi 
       
