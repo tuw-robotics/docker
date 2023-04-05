@@ -7,6 +7,7 @@ THIS_RUN = tuw-${ROS_DISTRO}-iwos-robot
 HOST_USER = ${USER}
 
 PROJECT_DIR = $(shell pwd)
+DYNAMIXEL_PORT = $(shell readlink /dev/dynamixel)
 
 all: help
 
@@ -61,26 +62,11 @@ run:
                        --network="host" \
                        --env="DISPLAY"  \
                        --privileged \
+                       -e DYNAMIXEL_PORT=$(shell readlink /dev/dynamixel) \
                        --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \
                        --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
                        --mount type=bind,source=/dev/transducer,target=/dev/transducer \
                        ${THIS_CONTAINER}
 
-run_old:
-	@docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
-
 clean:
 	@docker rmi -f ${THIS_CONTAINER}
-
-print_docker_pull:
-	@echo "docker pull ${THIS_CONTAINER}"
-
-print_run:
-	@echo "run -ti --rm --name ${THIS_RUN} \n\
-  --network="host" \n\
-  --env="DISPLAY"  \n\
-  --privileged \n\
-  --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \n\
-  --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \n\
-  --mount type=bind,source=/dev/transducer,target=/dev/transducer \n\
-  ${THIS_CONTAINER}"

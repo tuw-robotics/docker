@@ -33,6 +33,8 @@ RUN echo 'alias c="clear"' >> ~/.bashrc
 RUN echo 'alias help="glow ~/info.md"' >> ~/.bashrc
 RUN echo 'roslaunch tuw_iwos_launches robot.launch rviz:=false' >> ~/.bash_history
 
+ENV DYNAMIXEL_PORT=ttyUSB0
+
 USER root
 COPY entrypoint.sh /entrypoint.sh
 RUN rm -rf ${MY_HOME}/.ros
