@@ -51,13 +51,13 @@ git_clone:
 git_pull:
 	@find . -type d -name .git -exec echo -n '{} - ' \; -exec git --git-dir=${PROJECT_DIR}/{} branch --show-current \; -exec git --git-dir={} --work-tree=${PROJECT_DIR}/{}/.. pull origin \;
 
-build:
+docker_build:
 	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" .
 
-build_no_cache:
+docker_build_no_cache:
 	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" . --no-cache
 
-run:
+docker_run:
 	@docker run -ti --rm --name ${THIS_RUN} \
                        --network="host" \
                        --env="DISPLAY"  \
@@ -70,3 +70,18 @@ run:
 
 clean:
 	@docker rmi -f ${THIS_CONTAINER}
+
+print_docker_pull:
+	@echo docker pull ${THIS_CONTAINER}
+
+readlink_function = "$$ \b(readlink /dev/dynamixel)"
+print_docker_run:
+	@echo docker run -ti --rm --name ${THIS_RUN} \
+                            --network="host" \
+                            --env="DISPLAY"  \
+                            --privileged \
+                            -e DYNAMIXEL_PORT=${readlink_function} \
+                            --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \
+                            --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
+                            --mount type=bind,source=/dev/transducer,target=/dev/transducer \
+                            ${THIS_CONTAINER}
