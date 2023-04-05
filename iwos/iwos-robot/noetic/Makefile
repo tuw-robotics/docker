@@ -4,6 +4,7 @@ ROOT_CONTAINER = ${ROOT_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-ide
 THIS_CONTAINER_OWNER = ekrobotics
 THIS_CONTAINER = ${THIS_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-iwos-robot
 THIS_RUN = tuw-${ROS_DISTRO}-iwos-robot
+HOST_USER = ${USER}
 
 PROJECT_DIR = $(shell pwd)
 
@@ -56,6 +57,16 @@ build_no_cache:
 	@docker build --rm -t ${THIS_CONTAINER} --build-arg ROOT_CONTAINER=${ROOT_CONTAINER}  --build-arg SSH_PRIVATE_KEY="${SSH_PRIVATE_KEY}" . --no-cache
 
 run:
+	@docker run -ti --rm --name ${THIS_RUN} \
+                       --network="host" \
+                       --env="DISPLAY"  \
+                       --privileged \
+                       --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \
+                       --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
+                       --mount type=bind,source=/dev/transducer,target=/dev/transducer \
+                       ${THIS_CONTAINER}
+
+run_old:
 	@docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}
 
 clean:
@@ -65,4 +76,11 @@ print_docker_pull:
 	@echo "docker pull ${THIS_CONTAINER}"
 
 print_run:
-	@echo "docker run -ti --rm --network="host" --env="DISPLAY" --name ${THIS_RUN} --device=/dev/dynamixel --device=/dev/transducer --device=/dev/ttyACM0 --device=/dev/ttyACM1 --device=/dev/input/js0 ${THIS_CONTAINER}"
+	@echo "run -ti --rm --name ${THIS_RUN} \n\
+  --network="host" \n\
+  --env="DISPLAY"  \n\
+  --privileged \n\
+  --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \n\
+  --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \n\
+  --mount type=bind,source=/dev/transducer,target=/dev/transducer \n\
+  ${THIS_CONTAINER}"
