@@ -31,7 +31,9 @@ RUN echo 'source ${PROJECTS_DIR}/ws01/devel/setup.bash' >> ~/.bashrc
 RUN echo 'alias e="exit"' >> ~/.bashrc
 RUN echo 'alias c="clear"' >> ~/.bashrc
 RUN echo 'alias help="glow ~/info.md"' >> ~/.bashrc
+RUN echo 'roslaunch tuw_iwos_experiment_launches tracking.launch' >> ~/.bash_history
 RUN echo 'roslaunch tuw_iwos_launches robot.launch rviz:=false' >> ~/.bash_history
+RUN echo 'roslaunch tuw_iwos_launches robot.launch rviz:=false gamepad:=false' >> ~/.bash_history
 
 ENV DYNAMIXEL_PORT=ttyUSB0
 
