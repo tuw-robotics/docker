@@ -1,7 +1,7 @@
 ROS_DISTRO = noetic
 ROOT_CONTAINER_OWNER = tuwrobotics
 ROOT_CONTAINER = ${ROOT_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-ide
-THIS_CONTAINER_OWNER = ekrobotics
+THIS_CONTAINER_OWNER = ${CONTAINER_OWNER}
 THIS_CONTAINER = ${THIS_CONTAINER_OWNER}/tuw-${ROS_DISTRO}-iwos-robot
 THIS_RUN = tuw-${ROS_DISTRO}-iwos-robot
 HOST_USER = ${USER}
@@ -62,8 +62,7 @@ docker_run:
                        --network="host" \
                        --env="DISPLAY"  \
                        --privileged \
-                       -e DYNAMIXEL_PORT=$(shell readlink /dev/dynamixel) \
-                       --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \
+                       -e DYNAMIXEL_PORT=$(shell readlink /dev/dynamixel) \ \
                        --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
                        --mount type=bind,source=/dev/transducer,target=/dev/transducer \
                        ${THIS_CONTAINER}
@@ -81,7 +80,6 @@ print_docker_run:
                             --env="DISPLAY"  \
                             --privileged \
                             -e DYNAMIXEL_PORT=${readlink_function} \
-                            --mount type=bind,source=/home/${USER}/Data,target=/home/robot/data \
                             --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
                             --mount type=bind,source=/dev/transducer,target=/dev/transducer \
                             ${THIS_CONTAINER}
