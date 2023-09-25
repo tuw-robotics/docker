@@ -62,7 +62,7 @@ docker_run:
                        --network="host" \
                        --env="DISPLAY"  \
                        --privileged \
-                       -e DYNAMIXEL_PORT=$(shell readlink /dev/dynamixel) \ \
+                       -e DYNAMIXEL_PORT=$(shell readlink /dev/dynamixel) \
                        --mount type=bind,source=/dev/dynamixel,target=/dev/dynamixel \
                        --mount type=bind,source=/dev/transducer,target=/dev/transducer \
                        ${THIS_CONTAINER}

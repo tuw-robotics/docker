@@ -14,6 +14,9 @@ export CONTAINER_OWNER=<dockerhub username>
 You can also add this to your `.bashrc` file, this way this variable will be set as desired by default.
 
 ## Building
+Building this container requires the `tuw-noetic-ide` container.
+Build that container first, for this reason please check out `enviroment/README.md`.
+
 To build the image the sources for the Independent Wheel Offset Steering robot prototype are required.
 The `Makefile` eases the process of cloning the required repositories with the command:
 
@@ -65,6 +68,13 @@ You can pull the image with:
 ```bash
 make docker_pull
 ```
+
+A prebuilt version of this docker container can be pulled with:
+```bash
+docker pull ekrobotics/tuw-noetic-iwos-robot:latest
+```
+Note that this version might be outdated.
+
 ## Running
 Finally, with the docker image on the robot you can run:
 ```bash
